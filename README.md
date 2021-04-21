@@ -12,3 +12,12 @@ Set of different functions and macros usually used in the various applications.
 - Support for retrieving number of elements for statically allocated array
 - Compilation-time assert feature
 - User friendly MIT license
+
+## How to use
+
+Usage is very simply. Add `lwutil.c` file to compilation flag and make sure compiler has access to `lwutil.h` for include paths.
+
+## Contribute
+
+This is a generic library and welcomes different contributions.
+We accept issue reports or, even better, pull-requests with bugs or new features.
