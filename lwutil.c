@@ -133,3 +133,60 @@ lwutil_ld_u32_be(const void* ptr) {
     const uint8_t* p = ptr;
     return p[0] << 24 | p[1] << 16 | p[2] << 8 | p[3];
 }
+
+/**
+ * \brief           Makes ascii char array from unsigned int
+ * \param[in]       hex: Hexadecimal data to be converted
+ * \param[out]      ascii: Minimum `3-bytes` long array to write value to
+ */
+void
+lwutil_u8_to_2asciis(uint8_t hex, char *ascii) {
+    for(uint8_t i = 2; i !=0; i--)
+    {
+        uint8_t aux = hex>>(4*(i-1));
+        aux &= 0x0F;
+
+        aux = (aux <= 9) ? (aux + 0x30) : (aux + 0x57);
+
+		ascii[2-i] = aux;     
+    }
+    ascii[2] = 0;
+}
+
+/**
+ * \brief           Makes ascii char array from unsigned int
+ * \param[in]       hex: Hexadecimal data to be converted
+ * \param[out]      ascii: Minimum `5-bytes` long array to write value to
+ */
+void
+lwutil_u16_to_4asciis(uint16_t hex, char *ascii) {
+    for(uint8_t i = 4; i !=0; i--)
+    {
+        uint8_t aux = hex>>(4*(i-1));
+        aux &= 0x0F;
+
+        aux = (aux <= 9) ? (aux + 0x30) : (aux + 0x57);
+
+		ascii[4-i] = aux;     
+    }
+    ascii[4] = 0;
+}
+
+/**
+ * \brief           Makes ascii char array from unsigned int
+ * \param[in]       hex: Hexadecimal data to be converted
+ * \param[out]      ascii: Minimum `9-bytes` long array to write value to
+ */
+void
+lwutil_u32_to_8asciis(uint32_t hex, char *ascii) {
+    for(uint8_t i = 8; i !=0; i--)
+    {
+        uint8_t aux = hex>>(4*(i-1));
+        aux &= 0x0F;
+
+        aux = (aux <= 9) ? (aux + 0x30) : (aux + 0x57);
+
+		ascii[8-i] = aux;     
+    }
+    ascii[8] = 0;
+}
