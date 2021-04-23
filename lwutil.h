@@ -129,6 +129,10 @@ void        lwutil_u8_to_2asciis(uint8_t hex, char* ascii);
 void        lwutil_u16_to_4asciis(uint16_t hex, char* ascii);
 void        lwutil_u32_to_8asciis(uint32_t hex, char* ascii);
 
+uint8_t lwutil_u8_check_bit_sts(const uint8_t num, const uint8_t pos);
+uint8_t lwutil_u16_check_bit_sts(const uint16_t num, const uint8_t pos);
+uint8_t lwutil_u32_check_bit_sts(const uint32_t num, const uint8_t pos);
+
 /**
  * \}
  */
