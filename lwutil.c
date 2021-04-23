@@ -181,3 +181,48 @@ lwutil_u32_to_8asciis(uint32_t hex, char* ascii) {
     }
     ascii[8] = '\0';
 }
+
+/**
+ * \brief           Check if bit is set in a '8-bit' number
+ * \param[in]       num: Number in which the bit needs to be checked
+ * \param[in]       pos: position of the bit which needs to be checked
+  * \return         returns 1 if bit is set, 0 if bit is cleared
+ */
+
+uint8_t lwutil_u8_check_bit_sts(const uint8_t num, const uint8_t pos)
+{
+	if(num & (1<< pos))
+		return(1);
+	else
+		return(0);
+}
+
+/**
+ * \brief           Check if bit is set in a '16-bit' number
+ * \param[in]       num: Number in which the bit needs to be checked
+ * \param[in]       pos: position of the bit which needs to be checked
+  * \return         returns 1 if bit is set, 0 if bit is cleared
+ */
+
+uint8_t lwutil_u16_check_bit_sts(const uint16_t num, const uint8_t pos)
+{
+	if(num & (1<< pos))
+		return(1);
+	else
+		return(0);
+}
+
+/**
+ * \brief           Check if bit is set in a '32-bit' number
+ * \param[in]       num: Number in which the bit needs to be checked
+ * \param[in]       pos: position of the bit which needs to be checked
+  * \return         returns 1 if bit is set, 0 if bit is cleared
+ */
+
+uint8_t lwutil_u32_check_bit_sts(const uint32_t num, const uint8_t pos)
+{
+	if(num & (1<< pos))
+		return(1);
+	else
+		return(0);
+}

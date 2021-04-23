@@ -88,6 +88,22 @@ extern "C" {
 
 #define LWUTIL_CONCAT_BASE(x, y)                x ## y
 #define LWUTIL_CONCAT(s0, s1)                   LWC_CONCAT_BASE(s0, s1)
+/**
+ * \brief           Set a bit at specific position in a number, other bits are unchanged
+ * \param[in]       num: Number in which bit needs to be set
+ * \param[in]       pos: Position of bit to be set
+ * \return          number with bit at 'pos' set
+ */
+
+#define LWUTIL_SET_BIT(num, pos)				num = num | (1<<pos)
+/**
+ * \brief           Clear a bit at specific position in a number, other bits are unchanged
+ * \param[in]       num: Number in which bit needs to be cleared
+ * \param[in]       pos: Position of bit to be cleared
+ * \return          number with bit at 'pos' cleared
+ */
+
+#define LWUTIL_CLR_BIT(num,pos)					num = num & ~(1<<pos)
 
 /**
  * \brief           Compile time assert to validate specific expression
