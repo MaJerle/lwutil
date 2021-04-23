@@ -226,3 +226,76 @@ uint8_t lwutil_u32_check_bit_sts(const uint32_t num, const uint8_t pos)
 	else
 		return(0);
 }
+
+/**
+ * \brief           Get the upper nibble of an '8-bit' number
+ * \param[in]       num: Number from which upper nibble is to be extracted
+ * \return         returns upper nibble data, lower nibble will be set to 0 
+ * \example			if num = 0x83, return = 0x80 
+ */
+
+uint8_t lwutil_u8_get_upper_nibble(const uint8_t num)
+{
+	return(num & (0xF0));
+}
+
+/**
+ * \brief           Get the lower nibble of an '8-bit' number
+ * \param[in]       num: Number from which lower nibble is to be extracted
+ * \return         returns lower nibble data, upper nibble will be set to 0 
+ * \example			if num = 0x83, return = 0x03 
+ */
+
+uint8_t lwutil_u8_get_lower_nibble(const uint8_t num)
+{
+	return(num & (0x0F));
+}
+
+/**
+ * \brief           Get the upper byte of an '16-bit' number
+ * \param[in]       num: Number from which upper byte is to be extracted
+ * \return          returns upper byte data
+ * \example			if num = 0x8123, return = 0x81 
+ */
+
+uint8_t lwutil_u16_get_upper_byte(const uint16_t num)
+{
+	return((num & (0xFF00)) >> 8);
+}
+
+/**
+ * \brief           Get the lower byte of an '16-bit' number
+ * \param[in]       num: Number from which lower byte is to be extracted
+ * \return          returns lower byte data, upper byte will be set to 0 
+ * \example			if num = 0x8123, return = 0x23 
+ */
+
+uint8_t lwutil_u16_get_lower_byte(const uint16_t num)
+{
+	return(num & (0xFF));
+}
+
+/**
+ * \brief           Get the upper word of an '32-bit' number
+ * \param[in]       num: Number from which upper word is to be extracted
+ * \return          returns upper word data
+ * \example			if num = 0x81234567, return = 0x8123 
+ */
+
+uint16_t lwutil_u32_get_upper_word(const uint32_t num)
+{
+	return((num & (0xFFFF0000)) >> 16);
+}
+
+/**
+ * \brief           Get the lower byte of an '16-bit' number
+ * \param[in]       num: Number from which lower byte is to be extracted
+ * \return          returns lower byte data, upper byte will be set to 0 
+ * \example			iif num = 0x81234567, return = 0x4567 
+ */
+
+uint16_t lwutil_u16_get_lower_word(const uint32_t num)
+{
+	return(num & (0x0000FFFF));
+}
+

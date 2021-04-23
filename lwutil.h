@@ -133,6 +133,14 @@ uint8_t lwutil_u8_check_bit_sts(const uint8_t num, const uint8_t pos);
 uint8_t lwutil_u16_check_bit_sts(const uint16_t num, const uint8_t pos);
 uint8_t lwutil_u32_check_bit_sts(const uint32_t num, const uint8_t pos);
 
+uint8_t lwutil_u8_get_upper_nibble(const uint8_t num);
+uint8_t lwutil_u8_get_lower_nibble(const uint8_t num);
+uint8_t lwutil_u16_get_upper_byte(const uint16_t num);
+uint8_t lwutil_u16_get_lower_byte(const uint16_t num);
+
+uint16_t lwutil_u32_get_upper_word(const uint32_t num);
+uint16_t lwutil_u32_get_lower_word(const uint32_t num);
+
 /**
  * \}
  */
