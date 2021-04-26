@@ -103,6 +103,53 @@ extern "C" {
 #define LWUTIL_COMPILE_TIME_ASSERT(exp, random_variable_name)\
     typedef char LWUTIL_CONCAT2(random_variable_name, __LINE__)[!(exp) ? -1 : 1];
 
+/**
+ * \brief           Check if all bits in the `bit_mask` are set in the input value
+ * Used only for integer types
+ * \param[in]       val: Value to check for bits in
+ * \param[in]       bit_mask: Bit mask to check in value
+ * \return          `1` if all bits are set, `0` otherwise
+ */
+#define lwutil_bits_is_set_all(val, bit_mask)       (((val) & (bit_mask)) == (bit_mask))
+
+/**
+ * \brief           Check if any of the `bit_mask` bits is set in the input value
+ * Used only for integer types
+ * \param[in]       val: Value to check for bits in
+ * \param[in]       bit_mask: Bit mask to check in value
+ * \return          `1` if any bit is set, `0` otherwise
+ */
+#define lwutil_bits_is_set_any(val, bit_mask)       (((val) & (bit_mask)) != 0)
+
+/**
+ * \brief           Set bit mask in the input value
+ * Used only for integer types
+ * \param[in]       val: Value to set bits in
+ * \param[in]       bit_mask: Bit mask indicating which bits to set
+ * \return          New value with bitwise OR between input value and bit mask
+ */
+#define lwutil_bits_set(val, bit_mask)              ((val) | (bit_mask))
+
+/**
+ * \brief           Clear bit mask in the input value
+ * Used only for integer types
+ * \param[in]       val: Value to clear bits in
+ * \param[in]       bit_mask: Bit mask indicating which bits to clear
+ * \return          New value with bitwise AND and negated bit_mask between input value and bit mask
+ *                  Value has bits cleared in the bit_mask set
+ */
+#define lwutil_bits_clear(val, bit_mask)            ((val) & ~(bit_mask))
+
+/**
+ * \brief           Toggle bit mask in the input value
+ * Used only for integer types
+ * \param[in]       val: Value to toggle bits in
+ * \param[in]       bit_mask: Bit mask indicating which bits to toggle
+ * \return          New value with bitwise AND and negated bit_mask between input value and bit mask
+ *                  Value has bits cleared in the bit_mask set
+ */
+#define lwutil_bits_toggle(val, bit_mask)           ((val) ^ (bit_mask))
+
 void        lwutil_st_u16_le(uint16_t val, void* ptr);
 void        lwutil_st_u32_le(uint32_t val, void* ptr);
 uint16_t    lwutil_ld_u16_le(const void* ptr);
