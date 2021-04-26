@@ -97,7 +97,7 @@ extern "C" {
  *                      Can be whatever until it is valid variable name
  */
 #define LWUTIL_COMPILE_TIME_ASSERT(exp, random_variable_name)\
-    typedef char LWC_CONCAT2(random_variable_name, __LINE__)[!(exp) ? -1 : 1];
+    typedef char LWUTIL_CONCAT2(random_variable_name, __LINE__)[!(exp) ? -1 : 1];
 
 void        lwutil_st_u16_le(uint16_t val, void* ptr);
 void        lwutil_st_u32_le(uint32_t val, void* ptr);
