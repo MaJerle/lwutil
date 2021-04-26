@@ -87,7 +87,7 @@ extern "C" {
 #define LWUTIL_UNUSED(x)                        (void)(a)
 
 #define LWUTIL_CONCAT_BASE(x, y)                x ## y
-#define LWUTIL_CONCAT(s0, s1)                   LWC_CONCAT_BASE(s0, s1)
+#define LWUTIL_CONCAT(s0, s1)                   LWUTIL_CONCAT_BASE(s0, s1)
 
 /**
  * \brief           Compile time assert to validate specific expression
