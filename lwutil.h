@@ -74,7 +74,11 @@ extern "C" {
 
 /**
  * \brief           Get absolute value of the input
- * Returns always-positive value of the input
+ * Returns always-positive value of the input.
+ * \note            Special care must be taken when input variable holds
+ * minimum value available for given integer type (char, int, long, ...).
+ * Making absolute value of such input means longer output type. 
+ * Consider writing result of this function to unsigned type of same integer width.
  * \param[in]       x: Input value
  * \return          Absolute value of the input value
  */
