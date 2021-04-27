@@ -10,6 +10,7 @@ Set of different functions and macros usually used in the various applications.
 - Support for unused macros
 - Support for storing and loading data from array in little- or big- endian formats
 - Support for retrieving number of elements for statically allocated array
+- Support for bitwise operations to set, clear, check or toggle bits
 - Compilation-time assert feature
 - User friendly MIT license
 
