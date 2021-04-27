@@ -22,3 +22,5 @@ Usage is very simply. Add `lwutil.c` file to compilation flag and make sure comp
 
 This is a generic library and welcomes different contributions.
 We accept issue reports or, even better, pull-requests with bugs or new features.
+
+Use [c-code-style](https://github.com/MaJerle/c-code-style) rules for coding and keep the same coding consistency.
