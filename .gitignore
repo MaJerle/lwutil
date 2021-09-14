@@ -76,6 +76,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 _build/
+[Dd]ev/*.exe
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -137,6 +138,7 @@ StyleCopReport.xml
 *.scc
 *.out
 *.sim
+*.exe
 
 # Chutzpah Test files
 _Chutzpah*
