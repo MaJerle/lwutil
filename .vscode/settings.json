@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "lwjson.h": "c",
+        "lwutil.h": "c"
+    }
+}

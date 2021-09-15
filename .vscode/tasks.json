@@ -1,27 +1,37 @@
 {
 	"version": "2.0.0",
 	"tasks": [
-		{
-			"type": "cppbuild",
-			"label": "C/C++: gcc.exe build active file",
-			"command": "C:\\MinGW\\bin\\gcc.exe",
-			"args": [
-				"-g",
-				"${workspaceFolder}\\*.c",
-				"${workspaceFolder}\\dev\\VisualStudio\\main.c",
-				"-o",
-				"${workspaceFolder}\\my_program.exe"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}"
-			},
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-		}
-	]
+        {
+            "type": "cppbuild",
+            "label": "Build project",
+            "command": "C:\\MinGW\\bin\\gcc.exe",
+            "args": [
+                "-g",
+                "${workspaceFolder}\\lwutil.c",
+                "${workspaceFolder}\\dev\\VisualStudio\\main.c",
+                "-I${workspaceFolder}\\",
+                "-o",
+                "${workspaceFolder}\\Debug\\output.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Run built code",
+            "command": "${workspaceFolder}\\Debug\\output.exe",
+            "problemMatcher": [],
+            "dependsOn": [
+                "Build project"
+            ]
+        }
+    ]
 }
