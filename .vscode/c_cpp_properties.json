@@ -3,7 +3,6 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}\\lwjson\\src\\include",
                 "${workspaceFolder}\\dev\\VisualStudio",
                 "${workspaceFolder}"
             ],
