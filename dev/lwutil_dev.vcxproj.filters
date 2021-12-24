@@ -10,7 +10,7 @@
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lwutil.c">
+    <ClCompile Include="..\lwutil\src\lwutil\lwutil.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,0 +1,4 @@
+# ninja log v5
+7	100	6620745768449524	CMakeFiles/LwLibPROJECT.dir/dev/main.c.obj	7c445a07947c2d11
+1	111	6620745768539611	CMakeFiles/LwLibPROJECT.dir/lwutil/src/lwutil/lwutil.c.obj	54256ba38094acdf
+111	258	6620745769966067	LwLibPROJECT.exe	51b351cb28cc2e40

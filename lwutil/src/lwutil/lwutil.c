@@ -32,7 +32,7 @@
  * Version:         v1.0.0
  */
 #include <string.h>
-#include "lwutil.h"
+#include "lwutil/lwutil.h"
 
 /**
  * \brief           Store `16-bit` value to bytes array in little-endian format

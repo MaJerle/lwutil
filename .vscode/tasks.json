@@ -1,24 +1,23 @@
 {
 	"version": "2.0.0",
+    
+    /* For this builds, you need
+     *
+     * - Ninja build system
+     * - MSYS2 compiler with ninja support
+     * - C/C++ extension for VSCode
+     * - CMake-Tools extension for VSCode
+     */
 	"tasks": [
         {
             "type": "cppbuild",
             "label": "Build project",
-            "command": "C:\\MinGW\\bin\\gcc.exe",
-            "args": [
-                "-g",
-                "${workspaceFolder}\\lwutil.c",
-                "${workspaceFolder}\\dev\\VisualStudio\\main.c",
-                "-I${workspaceFolder}\\",
-                "-o",
-                "${workspaceFolder}\\Debug\\output.exe"
-            ],
+            "command": "cmake",
+            "args": ["--build", "\"build\""],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": [
-                "$gcc"
-            ],
+            "problemMatcher": ["$gcc"],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -26,12 +25,30 @@
         },
         {
             "type": "shell",
-            "label": "Run built code",
-            "command": "${workspaceFolder}\\Debug\\output.exe",
+            "label": "Re-build project",
+            "command": "cmake",
+            "args": ["--build", "\"build\"", "--clean-first", "-v"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"],
+        },
+        {
+            "type": "shell",
+            "label": "Clean project",
+            "command": "cmake",
+            "args": ["--build", "\"build\"", "--target", "clean"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "Run application",
+            "command": "${workspaceFolder}\\build\\LwLibPROJECT.exe",
+            "args": [],
             "problemMatcher": [],
-            "dependsOn": [
-                "Build project"
-            ]
-        }
+        },
     ]
 }

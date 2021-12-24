@@ -1,0 +1,12 @@
+[
+{
+  "directory": "D:/_WORK/embedded/lwutil/build",
+  "command": "c:\\msys64\\mingw64\\bin\\x86_64-w64-mingw32-gcc.exe -DCONSOLE -DLWUTIL_DEV -DWIN32 -D_DEBUG -ID:/_WORK/embedded/lwutil/dev -ID:/_WORK/embedded/lwutil/lwutil/src/include -g -o CMakeFiles\\LwLibPROJECT.dir\\dev\\main.c.obj -c D:\\_WORK\\embedded\\lwutil\\dev\\main.c",
+  "file": "D:\\_WORK\\embedded\\lwutil\\dev\\main.c"
+},
+{
+  "directory": "D:/_WORK/embedded/lwutil/build",
+  "command": "c:\\msys64\\mingw64\\bin\\x86_64-w64-mingw32-gcc.exe -DCONSOLE -DLWUTIL_DEV -DWIN32 -D_DEBUG -ID:/_WORK/embedded/lwutil/dev -ID:/_WORK/embedded/lwutil/lwutil/src/include -g -o CMakeFiles\\LwLibPROJECT.dir\\lwutil\\src\\lwutil\\lwutil.c.obj -c D:\\_WORK\\embedded\\lwutil\\lwutil\\src\\lwutil\\lwutil.c",
+  "file": "D:\\_WORK\\embedded\\lwutil\\lwutil\\src\\lwutil\\lwutil.c"
+}
+]

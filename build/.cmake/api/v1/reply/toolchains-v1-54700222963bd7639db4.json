@@ -1,0 +1,139 @@
+{
+	"kind" : "toolchains",
+	"toolchains" : 
+	[
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/11.2.0/include",
+						"C:/msys64/mingw64/include",
+						"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed",
+						"C:/msys64/mingw64/x86_64-w64-mingw32/include"
+					],
+					"linkDirectories" : 
+					[
+						"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/11.2.0",
+						"C:/msys64/mingw64/lib/gcc",
+						"C:/msys64/mingw64/x86_64-w64-mingw32/lib",
+						"C:/msys64/mingw64/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"mingw32",
+						"gcc",
+						"moldname",
+						"mingwex",
+						"kernel32",
+						"pthread",
+						"advapi32",
+						"shell32",
+						"user32",
+						"kernel32",
+						"mingw32",
+						"gcc",
+						"moldname",
+						"mingwex",
+						"kernel32"
+					]
+				},
+				"path" : "c:/msys64/mingw64/bin/x86_64-w64-mingw32-gcc.exe",
+				"version" : "11.2.0"
+			},
+			"language" : "C",
+			"sourceFileExtensions" : 
+			[
+				"c",
+				"m"
+			]
+		},
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"C:/msys64/mingw64/include/c++/11.2.0",
+						"C:/msys64/mingw64/include/c++/11.2.0/x86_64-w64-mingw32",
+						"C:/msys64/mingw64/include/c++/11.2.0/backward",
+						"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/11.2.0/include",
+						"C:/msys64/mingw64/include",
+						"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed",
+						"C:/msys64/mingw64/x86_64-w64-mingw32/include"
+					],
+					"linkDirectories" : 
+					[
+						"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/11.2.0",
+						"C:/msys64/mingw64/lib/gcc",
+						"C:/msys64/mingw64/x86_64-w64-mingw32/lib",
+						"C:/msys64/mingw64/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"stdc++",
+						"mingw32",
+						"gcc_s",
+						"gcc",
+						"moldname",
+						"mingwex",
+						"kernel32",
+						"pthread",
+						"advapi32",
+						"shell32",
+						"user32",
+						"kernel32",
+						"mingw32",
+						"gcc_s",
+						"gcc",
+						"moldname",
+						"mingwex",
+						"kernel32"
+					]
+				},
+				"path" : "c:/msys64/mingw64/bin/x86_64-w64-mingw32-g++.exe",
+				"version" : "11.2.0"
+			},
+			"language" : "CXX",
+			"sourceFileExtensions" : 
+			[
+				"C",
+				"M",
+				"c++",
+				"cc",
+				"cpp",
+				"cxx",
+				"mm",
+				"mpp",
+				"CPP",
+				"ixx",
+				"cppm"
+			]
+		},
+		{
+			"compiler" : 
+			{
+				"implicit" : {},
+				"path" : "x86_64-w64-mingw32-windres"
+			},
+			"language" : "RC",
+			"sourceFileExtensions" : 
+			[
+				"rc",
+				"RC"
+			]
+		}
+	],
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}
