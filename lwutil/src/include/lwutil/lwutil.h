@@ -77,7 +77,7 @@ extern "C" {
  * Returns always-positive value of the input.
  * \note            Special care must be taken when input variable holds
  * minimum value available for given signed integer type (char, int, long, ...).
- * Making absolute value of such input means longer output type requirement. 
+ * Making absolute value of such input means longer output type requirement.
  * Consider writing result of this function to unsigned type of same integer width.
  * For example, minimum `signed char` value is `-128` while its absolute value (`128`)
  * requires variable type of either `unsigned char` or minimum signed 16-bit (or more).
