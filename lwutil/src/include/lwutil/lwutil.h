@@ -155,15 +155,105 @@ extern "C" {
  */
 #define lwutil_bits_toggle(val, bit_mask)           ((val) ^ (bit_mask))
 
-void        lwutil_st_u16_le(uint16_t val, void* ptr);
-void        lwutil_st_u32_le(uint32_t val, void* ptr);
-uint16_t    lwutil_ld_u16_le(const void* ptr);
-uint32_t    lwutil_ld_u32_le(const void* ptr);
+/**
+ * \brief           Store `16-bit` value to bytes array in little-endian format
+ * \param[in]       val: Value to write to output array
+ * \param[out]      ptr: Minimum `2-bytes` long output array to write value to
+ */
+static inline void
+lwutil_st_u16_le(uint16_t val, void* ptr) {
+    uint8_t* p = ptr;
 
-void        lwutil_st_u16_be(uint16_t val, void* ptr);
-void        lwutil_st_u32_be(uint32_t val, void* ptr);
-uint16_t    lwutil_ld_u16_be(const void* ptr);
-uint32_t    lwutil_ld_u32_be(const void* ptr);
+    p[0] = (uint8_t)((val >> 0) & 0xFF);
+    p[1] = (uint8_t)((val >> 8) & 0xFF);
+}
+
+/**
+ * \brief           Store `32-bit` value to bytes array in little-endian format
+ * \param[in]       val: Value to write to output array
+ * \param[out]      ptr: Minimum `4-bytes` long output array to write value to
+ */
+static inline void
+lwutil_st_u32_le(uint32_t val, void* ptr) {
+    uint8_t* p = ptr;
+
+    p[0] = (uint8_t)((val >> 0) & 0xFF);
+    p[1] = (uint8_t)((val >> 8) & 0xFF);
+    p[2] = (uint8_t)((val >> 16) & 0xFF);
+    p[3] = (uint8_t)((val >> 24) & 0xFF);
+}
+
+/**
+ * \brief           Load `16-bit` value from bytes array in little-endian format
+ * \param[in]       ptr: Minimum `2-bytes` long input array to extract bytes from
+ * \return          `16-bit` value extracted from input array
+ */
+static inline uint16_t
+lwutil_ld_u16_le(const void* ptr) {
+    const uint8_t* p = ptr;
+    return p[1] << 8 | p[0];
+}
+
+/**
+ * \brief           Load `32-bit` value from bytes array in little-endian format
+ * \param[in]       ptr: Minimum `2-bytes` long input array to extract bytes from
+ * \return          `32-bit` value extracted from input array
+ */
+static inline uint32_t
+lwutil_ld_u32_le(const void* ptr) {
+    const uint8_t* p = ptr;
+    return p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
+}
+
+/**
+ * \brief           Store `16-bit` value to bytes array in big-endian format
+ * \param[in]       val: Value to write to output array
+ * \param[out]      ptr: Minimum `2-bytes` long output array to write value to
+ */
+static inline void
+lwutil_st_u16_be(uint16_t val, void* ptr) {
+    uint8_t* p = ptr;
+
+    p[0] = (uint8_t)((val >> 8) & 0xFF);
+    p[1] = (uint8_t)((val >> 0) & 0xFF);
+}
+
+/**
+ * \brief           Store `32-bit` value to bytes array in big-endian format
+ * \param[in]       val: Value to write to output array
+ * \param[out]      ptr: Minimum `4-bytes` long output array to write value to
+ */
+static inline void
+lwutil_st_u32_be(uint32_t val, void* ptr) {
+    uint8_t* p = ptr;
+
+    p[0] = (uint8_t)((val >> 24) & 0xFF);
+    p[1] = (uint8_t)((val >> 16) & 0xFF);
+    p[2] = (uint8_t)((val >> 8) & 0xFF);
+    p[3] = (uint8_t)((val >> 0) & 0xFF);
+}
+
+/**
+ * \brief           Load `16-bit` value from bytes array in big-endian format
+ * \param[in]       ptr: Minimum `2-bytes` long input array to extract bytes from
+ * \return          `16-bit` value extracted from input array
+ */
+static inline uint16_t
+lwutil_ld_u16_be(const void* ptr) {
+    const uint8_t* p = ptr;
+    return p[0] << 8 | p[1];
+}
+
+/**
+ * \brief           Load `32-bit` value from bytes array in big-endian format
+ * \param[in]       ptr: Minimum `4-bytes` long input array to extract bytes from
+ * \return          `32-bit` value extracted from input array
+ */
+static inline uint32_t
+lwutil_ld_u32_be(const void* ptr) {
+    const uint8_t* p = ptr;
+    return p[0] << 24 | p[1] << 16 | p[2] << 8 | p[3];
+}
 
 void        lwutil_u8_to_2asciis(uint8_t hex, char* ascii);
 void        lwutil_u16_to_4asciis(uint16_t hex, char* ascii);
