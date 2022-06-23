@@ -90,7 +90,7 @@ extern "C" {
  * \brief           Unused variable to avoid compilation warning if declared but not used
  * \param[in]       x: Input variable to declare unused
  */
-#define LWUTIL_UNUSED(x)                        (void)(a)
+#define LWUTIL_UNUSED(x)                        (void)(x)
 
 #define LWUTIL_CONCAT_BASE(x, y)                x ## y
 #define LWUTIL_CONCAT(s0, s1)                   LWUTIL_CONCAT_BASE(s0, s1)
