@@ -19,13 +19,13 @@ add_executable(${PROJECT_NAME})
 # Add key executable block
 target_sources(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/dev/main.c
-    )
+)
 
 # Add key include paths
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/dev
-    )
+)
 
 # Compilation definition information
 target_compile_definitions(${PROJECT_NAME} PUBLIC
@@ -33,16 +33,14 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     _DEBUG
     CONSOLE
     LWUTIL_DEV
-    )
+)
 
-# Compiler and linker options
+# Compiler options
 target_compile_options(${PROJECT_NAME} PRIVATE
-    ${CPU_PARAMETERS}
     -Wall
     -Wextra
     -Wpedantic
-    -Wno-unused-parameter
-    )
+)
 
 # Add subdir with lwutil and link to the project
 add_subdirectory("lwutil")
