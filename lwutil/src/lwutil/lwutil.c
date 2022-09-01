@@ -33,6 +33,7 @@
  */
 #include <string.h>
 #include "lwutil/lwutil.h"
+
 /**
  * \brief           Makes ascii char array from `unsigned 8-bit` value
  * \param[in]       hex: Hexadecimal data to be converted
