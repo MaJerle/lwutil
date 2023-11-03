@@ -258,6 +258,8 @@ lwutil_ld_u32_be(const void* ptr) {
 void lwutil_u8_to_2asciis(uint8_t hex, char* ascii);
 void lwutil_u16_to_4asciis(uint16_t hex, char* ascii);
 void lwutil_u32_to_8asciis(uint32_t hex, char* ascii);
+uint8_t lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out);
+uint8_t lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len);
 
 /**
  * \}
