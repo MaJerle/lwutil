@@ -85,6 +85,14 @@ main(void) {
         len = lwutil_ld_u32_varint(arr, sizeof(arr), &val);
         TEST_IF_TRUE(val == 86942 && len == 3);
 
+        /* 86942 encoded as varint, little endian */
+        /* Test array too short */
+        arr[0] = 0x9E;
+        arr[1] = 0xA7;
+        arr[2] = 0x05;
+        len = lwutil_ld_u32_varint(arr, 2, &val);
+        TEST_IF_TRUE(len == 0 && val == 0);
+
         /* Store value */
         len = lwutil_st_u32_varint(150, arr, sizeof(arr));
         TEST_IF_TRUE(arr[0] == 0x96 && arr[1] == 0x01 && len == 2);
@@ -92,7 +100,10 @@ main(void) {
         /* Store value */
         len = lwutil_st_u32_varint(86942, arr, sizeof(arr));
         TEST_IF_TRUE(arr[0] == 0x9E && arr[1] == 0xA7 && arr[2] == 0x05 && len == 3);
-    }
 
+        /* Store value */
+        len = lwutil_st_u32_varint(86942, arr, 2);
+        TEST_IF_TRUE(len == 0);
+    }
     return 0;
 }

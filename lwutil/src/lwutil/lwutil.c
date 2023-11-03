@@ -109,7 +109,13 @@ lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out) {
         b = *p++;
         val |= ((uint32_t)(b & 0x7F)) << (cnt * 7);
         ++cnt;
-    } while (ptr_len-- > 0 && (b & 0x80) != 0);
+    } while (--ptr_len > 0 && (b & 0x80) > 0);
+
+    /* Check memory length */
+    if ((b & 0x80) > 0) {
+        val = 0;
+        cnt = 0;
+    }
     *val_out = val;
     return cnt;
 }
@@ -138,6 +144,11 @@ lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len) {
         *p++ = (val & 0x7F) | (val > 0x7F ? 0x80 : 0x00);
         val >>= 7;
         ++cnt;
-    } while (ptr_len-- > 0 && val > 0);
+    } while (--ptr_len > 0 && val > 0);
+
+    /* Memory check */
+    if (val > 0) {
+        cnt = 0;
+    }
     return cnt;
 }
