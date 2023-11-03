@@ -63,8 +63,16 @@ main(void) {
         char arr[10];
         lwutil_u32_to_8asciis(0x12345678, (char*)arr);
         TEST_IF_TRUE(strcmp(arr, "12345678") == 0);
+        lwutil_u32_to_8asciis(0x5678, (char*)arr);
+        TEST_IF_TRUE(strcmp(arr, "00005678") == 0);
         lwutil_u16_to_4asciis(0x1256, (char*)arr);
         TEST_IF_TRUE(strcmp(arr, "1256") == 0);
+        lwutil_u16_to_4asciis(0x156, (char*)arr);
+        TEST_IF_TRUE(strcmp(arr, "0156") == 0);
+        lwutil_u8_to_2asciis(0x16, (char*)arr);
+        TEST_IF_TRUE(strcmp(arr, "16") == 0);
+        lwutil_u8_to_2asciis(0x6, (char*)arr);
+        TEST_IF_TRUE(strcmp(arr, "06") == 0);
     }
     /* Test variable integer */
     {
