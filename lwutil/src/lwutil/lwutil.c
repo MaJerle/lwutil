@@ -31,6 +31,9 @@
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
  * Version:         v1.0.0
  */
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include "lwutil/lwutil.h"
 
@@ -41,13 +44,13 @@
  */
 void
 lwutil_u8_to_2asciis(uint8_t hex, char* ascii) {
-    for (uint8_t i = 2; i != 0; --i) {
-        uint8_t aux = (hex >> (4 * (i - 1))) & 0x0F;
+    for (uint8_t idx = 2U; idx != 0; --idx) {
+        uint8_t aux = (uint8_t)(hex >> (4U * (idx - 1U))) & 0x0FU;
 
-        aux = (aux <= 9) ? (aux + 0x30) : (aux + 0x57);
-        ascii[2 - i] = (char)aux;
+        aux = (aux <= 9U) ? (aux + 0x30U) : (aux + 0x57U);
+        ascii[2U - idx] = (char)aux;
     }
-    ascii[2] = '\0';
+    ascii[2U] = '\0';
 }
 
 /**
@@ -57,11 +60,11 @@ lwutil_u8_to_2asciis(uint8_t hex, char* ascii) {
  */
 void
 lwutil_u16_to_4asciis(uint16_t hex, char* ascii) {
-    for (uint8_t i = 4; i != 0; --i) {
-        uint8_t aux = (hex >> (4 * (i - 1))) & 0x0F;
+    for (uint8_t idx = 4U; idx != 0; --idx) {
+        uint8_t aux = (uint8_t)(hex >> (4U * (idx - 1U))) & 0x0FU;
 
-        aux = (aux <= 9) ? (aux + 0x30) : (aux + 0x57);
-        ascii[4 - i] = (char)aux;
+        aux = (aux <= 9U) ? (aux + 0x30U) : (aux + 0x57U);
+        ascii[4U - idx] = (char)aux;
     }
     ascii[4] = '\0';
 }
@@ -73,11 +76,11 @@ lwutil_u16_to_4asciis(uint16_t hex, char* ascii) {
  */
 void
 lwutil_u32_to_8asciis(uint32_t hex, char* ascii) {
-    for (uint8_t i = 8; i != 0; --i) {
-        uint8_t aux = (hex >> (4 * (i - 1))) & 0x0F;
+    for (uint8_t idx = 8U; idx != 0; --idx) {
+        uint8_t aux = (uint8_t)(hex >> (4U * (idx - 1U))) & 0x0FU;
 
-        aux = (aux <= 9) ? (aux + 0x30) : (aux + 0x57);
-        ascii[8 - i] = (char)aux;
+        aux = (aux <= 9U) ? (aux + 0x30U) : (aux + 0x57U);
+        ascii[8U - idx] = (char)aux;
     }
     ascii[8] = '\0';
 }
@@ -99,20 +102,20 @@ uint8_t
 lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out) {
     size_t cnt = 0;
     uint32_t val = 0;
-    const uint8_t* p = ptr;
-    uint8_t b;
+    const uint8_t* p_data = ptr;
+    uint8_t byt;
 
     if (ptr == NULL || ptr_len == 0 || val_out == NULL) {
         return 0;
     }
     do {
-        b = *p++;
-        val |= ((uint32_t)(b & 0x7F)) << (cnt * 7);
+        byt = *p_data++;
+        val |= ((uint32_t)(byt & 0x7FU)) << (cnt * 7U);
         ++cnt;
-    } while (--ptr_len > 0 && (b & 0x80) > 0);
+    } while (--ptr_len > 0 && (byt & 0x80U) > 0);
 
     /* Check memory length */
-    if ((b & 0x80) > 0) {
+    if ((byt & 0x80U) > 0) {
         val = 0;
         cnt = 0;
     }
@@ -135,14 +138,15 @@ lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out) {
  */
 uint8_t
 lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len) {
-    uint8_t* p = ptr;
+    uint8_t* p_data = ptr;
     size_t cnt = 0;
+
     if (ptr == NULL || ptr_len == 0) {
         return 0;
     }
     do {
-        *p++ = (val & 0x7F) | (val > 0x7F ? 0x80 : 0x00);
-        val >>= 7;
+        *p_data++ = (val & 0x7FU) | (val > 0x7FU ? 0x80U : 0x00U);
+        val >>= 7U;
         ++cnt;
     } while (--ptr_len > 0 && val > 0);
 
