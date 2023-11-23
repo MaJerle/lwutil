@@ -1,35 +1,33 @@
 {
-	"name": "LwUTIL",
-	"version": "1.0.0",
-	"description": "Lightweight utility functions for daily application development, library that simply works in the project",
-	"keywords": "utility, utils, functions, macros, bits, bit, bitwise, string, str, integer, float, double, char, unsigned",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/MaJerle/lwutil.git"
-	},
-	"authors": [
-		{
-		  "name": "Tilen Majerle",
-		  "email": "tilen@majerle.eu",
-		  "url": "https://majerle.eu"
-		}
-	],
-	"license": "MIT",
-	"homepage": "https://github.com/MaJerle/lwutil",
-	"dependencies": {
-
-	},
-	"frameworks": "*",
-	"platforms": "*",
-	"export": {
-		"exclude": [
-			".github",
-			"dev",
-			"docs",
-			"**/.vs",
-			"**/Debug",
-			"build",
-			"**/build"
-		]
-	}
+    "name": "LwUTIL",
+    "version": "1.2.0",
+    "description": "Lightweight utility functions for daily application development, library that simply works in the project",
+    "keywords": "utility, utils, functions, macros, bits, bit, bitwise, string, str, integer, float, double, char, unsigned",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/MaJerle/lwutil.git"
+    },
+    "authors": [
+        {
+            "name": "Tilen Majerle",
+            "email": "tilen@majerle.eu",
+            "url": "https://majerle.eu"
+        }
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/MaJerle/lwutil",
+    "dependencies": {},
+    "frameworks": "*",
+    "platforms": "*",
+    "export": {
+        "exclude": [
+            ".github",
+            "dev",
+            "docs",
+            "**/.vs",
+            "**/Debug",
+            "build",
+            "**/build"
+        ]
+    }
 }
