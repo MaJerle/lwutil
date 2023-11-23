@@ -4,7 +4,7 @@
  */
 
 /*
- * Copyright (c) 2020 Tilen MAJERLE
+ * Copyright (c) 2023 Tilen MAJERLE
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,7 +29,7 @@
  * This file is part of LwUTIL - Lightweight utility library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.0.0
+ * Version:         v1.2.0
  */
 #ifndef LWUTIL_HDR_H
 #define LWUTIL_HDR_H
@@ -54,7 +54,7 @@ extern "C" {
  * \param[in]       x: Object to get array size of
  * \return          Number of elements in array (`element_count`)
  */
-#define LWUTIL_ARRAYSIZE(x)                     (sizeof(x) / sizeof((x)[0]))
+#define LWUTIL_ARRAYSIZE(x)      (sizeof(x) / sizeof((x)[0]))
 
 /**
  * \brief           Get larger value out of 2 different inputs
@@ -62,7 +62,7 @@ extern "C" {
  * \param[in]       y: Second input
  * \return          Larger of both inputs
  */
-#define LWUTIL_MAX(x, y)                        ((x) > (y) ? (x) : (y))
+#define LWUTIL_MAX(x, y)         ((x) > (y) ? (x) : (y))
 
 /**
  * \brief           Get smaller value out of 2 different inputs
@@ -70,30 +70,30 @@ extern "C" {
  * \param[in]       y: Second input
  * \return          Smaller of both inputs
  */
-#define LWUTIL_MIN(x, y)                        ((x) < (y) ? (x) : (y))
+#define LWUTIL_MIN(x, y)         ((x) < (y) ? (x) : (y))
 
 /**
  * \brief           Get absolute value of the input
  * Returns always-positive value of the input.
  * \note            Special care must be taken when input variable holds
  * minimum value available for given signed integer type (char, int, long, ...).
- * Making absolute value of such input means longer output type requirement. 
+ * Making absolute value of such input means longer output type requirement.
  * Consider writing result of this function to unsigned type of same integer width.
  * For example, minimum `signed char` value is `-128` while its absolute value (`128`)
  * requires variable type of either `unsigned char` or minimum signed 16-bit (or more).
  * \param[in]       x: Input value
  * \return          Absolute value of the input value
  */
-#define LWUTIL_ABS(x)                           ((x) < 0 ? -(x) : (x))
+#define LWUTIL_ABS(x)            ((x) < 0 ? -(x) : (x))
 
 /**
  * \brief           Unused variable to avoid compilation warning if declared but not used
  * \param[in]       x: Input variable to declare unused
  */
-#define LWUTIL_UNUSED(x)                        (void)(a)
+#define LWUTIL_UNUSED(x)         (void)(x)
 
-#define LWUTIL_CONCAT_BASE(x, y)                x ## y
-#define LWUTIL_CONCAT(s0, s1)                   LWUTIL_CONCAT_BASE(s0, s1)
+#define LWUTIL_CONCAT_BASE(x, y) x##y
+#define LWUTIL_CONCAT(s0, s1)    LWUTIL_CONCAT_BASE(s0, s1)
 
 /**
  * \brief           Compile time assert to validate specific expression
@@ -102,7 +102,7 @@ extern "C" {
  * \param[in]       random_variable_name: Meaningful variable name to be used.
  *                      Can be whatever until it is valid variable name
  */
-#define LWUTIL_COMPILE_TIME_ASSERT(exp, random_variable_name)\
+#define LWUTIL_COMPILE_TIME_ASSERT(exp, random_variable_name)                                                          \
     typedef char LWUTIL_CONCAT2(random_variable_name, __LINE__)[!(exp) ? -1 : 1];
 
 /**
@@ -112,7 +112,7 @@ extern "C" {
  * \param[in]       bit_mask: Bit mask to check in value
  * \return          `1` if all bits are set, `0` otherwise
  */
-#define lwutil_bits_is_set_all(val, bit_mask)       (((val) & (bit_mask)) == (bit_mask))
+#define lwutil_bits_is_set_all(val, bit_mask) (((val) & (bit_mask)) == (bit_mask))
 
 /**
  * \brief           Check if any of the `bit_mask` bits is set in the input value
@@ -121,7 +121,7 @@ extern "C" {
  * \param[in]       bit_mask: Bit mask to check in value
  * \return          `1` if any bit is set, `0` otherwise
  */
-#define lwutil_bits_is_set_any(val, bit_mask)       (((val) & (bit_mask)) != 0)
+#define lwutil_bits_is_set_any(val, bit_mask) (((val) & (bit_mask)) != 0)
 
 /**
  * \brief           Set bit mask in the input value
@@ -131,7 +131,7 @@ extern "C" {
  * \param[in]       bit_mask: Bit mask indicating which bits to set
  * \return          New value with bitwise OR between input value and bit mask
  */
-#define lwutil_bits_set(val, bit_mask)              ((val) | (bit_mask))
+#define lwutil_bits_set(val, bit_mask)        ((val) | (bit_mask))
 
 /**
  * \brief           Clear bit mask in the input value
@@ -142,7 +142,7 @@ extern "C" {
  * \return          New value with bitwise AND and negated bit_mask between input value and bit mask
  *                  Value has bits cleared in the bit_mask set
  */
-#define lwutil_bits_clear(val, bit_mask)            ((val) & ~(bit_mask))
+#define lwutil_bits_clear(val, bit_mask)      ((val) & ~(bit_mask))
 
 /**
  * \brief           Toggle bit mask in the input value
@@ -153,21 +153,113 @@ extern "C" {
  * \return          New value with bitwise AND and negated bit_mask between input value and bit mask
  *                  Value has bits cleared in the bit_mask set
  */
-#define lwutil_bits_toggle(val, bit_mask)           ((val) ^ (bit_mask))
+#define lwutil_bits_toggle(val, bit_mask)     ((val) ^ (bit_mask))
 
-void        lwutil_st_u16_le(uint16_t val, void* ptr);
-void        lwutil_st_u32_le(uint32_t val, void* ptr);
-uint16_t    lwutil_ld_u16_le(const void* ptr);
-uint32_t    lwutil_ld_u32_le(const void* ptr);
+/**
+ * \brief           Store `16-bit` value to bytes array in little-endian format
+ * \param[in]       val: Value to write to output array
+ * \param[out]      ptr: Minimum `2-bytes` long output array to write value to
+ */
+static inline void
+lwutil_st_u16_le(uint16_t val, void* ptr) {
+    uint8_t* p = ptr;
 
-void        lwutil_st_u16_be(uint16_t val, void* ptr);
-void        lwutil_st_u32_be(uint32_t val, void* ptr);
-uint16_t    lwutil_ld_u16_be(const void* ptr);
-uint32_t    lwutil_ld_u32_be(const void* ptr);
+    p[0] = (uint8_t)((val >> 0) & 0xFF);
+    p[1] = (uint8_t)((val >> 8) & 0xFF);
+}
 
-void        lwutil_u8_to_2asciis(uint8_t hex, char* ascii);
-void        lwutil_u16_to_4asciis(uint16_t hex, char* ascii);
-void        lwutil_u32_to_8asciis(uint32_t hex, char* ascii);
+/**
+ * \brief           Store `32-bit` value to bytes array in little-endian format
+ * \param[in]       val: Value to write to output array
+ * \param[out]      ptr: Minimum `4-bytes` long output array to write value to
+ */
+static inline void
+lwutil_st_u32_le(uint32_t val, void* ptr) {
+    uint8_t* p = ptr;
+
+    p[0] = (uint8_t)((val >> 0) & 0xFF);
+    p[1] = (uint8_t)((val >> 8) & 0xFF);
+    p[2] = (uint8_t)((val >> 16) & 0xFF);
+    p[3] = (uint8_t)((val >> 24) & 0xFF);
+}
+
+/**
+ * \brief           Load `16-bit` value from bytes array in little-endian format
+ * \param[in]       ptr: Minimum `2-bytes` long input array to extract bytes from
+ * \return          `16-bit` value extracted from input array
+ */
+static inline uint16_t
+lwutil_ld_u16_le(const void* ptr) {
+    const uint8_t* p = ptr;
+    return p[1] << 8 | p[0];
+}
+
+/**
+ * \brief           Load `32-bit` value from bytes array in little-endian format
+ * \param[in]       ptr: Minimum `2-bytes` long input array to extract bytes from
+ * \return          `32-bit` value extracted from input array
+ */
+static inline uint32_t
+lwutil_ld_u32_le(const void* ptr) {
+    const uint8_t* p = ptr;
+    return p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
+}
+
+/**
+ * \brief           Store `16-bit` value to bytes array in big-endian format
+ * \param[in]       val: Value to write to output array
+ * \param[out]      ptr: Minimum `2-bytes` long output array to write value to
+ */
+static inline void
+lwutil_st_u16_be(uint16_t val, void* ptr) {
+    uint8_t* p = ptr;
+
+    p[0] = (uint8_t)((val >> 8) & 0xFF);
+    p[1] = (uint8_t)((val >> 0) & 0xFF);
+}
+
+/**
+ * \brief           Store `32-bit` value to bytes array in big-endian format
+ * \param[in]       val: Value to write to output array
+ * \param[out]      ptr: Minimum `4-bytes` long output array to write value to
+ */
+static inline void
+lwutil_st_u32_be(uint32_t val, void* ptr) {
+    uint8_t* p = ptr;
+
+    p[0] = (uint8_t)((val >> 24) & 0xFF);
+    p[1] = (uint8_t)((val >> 16) & 0xFF);
+    p[2] = (uint8_t)((val >> 8) & 0xFF);
+    p[3] = (uint8_t)((val >> 0) & 0xFF);
+}
+
+/**
+ * \brief           Load `16-bit` value from bytes array in big-endian format
+ * \param[in]       ptr: Minimum `2-bytes` long input array to extract bytes from
+ * \return          `16-bit` value extracted from input array
+ */
+static inline uint16_t
+lwutil_ld_u16_be(const void* ptr) {
+    const uint8_t* p = ptr;
+    return p[0] << 8 | p[1];
+}
+
+/**
+ * \brief           Load `32-bit` value from bytes array in big-endian format
+ * \param[in]       ptr: Minimum `4-bytes` long input array to extract bytes from
+ * \return          `32-bit` value extracted from input array
+ */
+static inline uint32_t
+lwutil_ld_u32_be(const void* ptr) {
+    const uint8_t* p = ptr;
+    return p[0] << 24 | p[1] << 16 | p[2] << 8 | p[3];
+}
+
+void lwutil_u8_to_2asciis(uint8_t hex, char* ascii);
+void lwutil_u16_to_4asciis(uint16_t hex, char* ascii);
+void lwutil_u32_to_8asciis(uint32_t hex, char* ascii);
+uint8_t lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out);
+uint8_t lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len);
 
 /**
  * \}
@@ -178,4 +270,3 @@ void        lwutil_u32_to_8asciis(uint32_t hex, char* ascii);
 #endif /* __cplusplus */
 
 #endif /* LWUTIL_HDR_H */
-
