@@ -29,7 +29,7 @@
  * This file is part of LwUTIL - Lightweight utility library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.0.0
+ * Version:         v1.2.0
  */
 #ifndef LWUTIL_HDR_H
 #define LWUTIL_HDR_H

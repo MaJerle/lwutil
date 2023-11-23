@@ -2,6 +2,8 @@
 
 ## Develop
 
+## 1.2.0
+
 - Split CMakeLists.txt files between library and executable
 - Change license year to 2022
 - Update code style with astyle
