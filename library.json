@@ -29,5 +29,8 @@
             "build",
             "**/build"
         ]
+    },
+    "build": {
+        "includeDir": "lwutil/src/include"
     }
 }
