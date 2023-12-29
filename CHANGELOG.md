@@ -2,6 +2,8 @@
 
 ## Develop
 
+- Add `LWUTIL_SET_VALUE_IF_PTR_NOT_NULL`
+
 ## 1.2.0
 
 - Split CMakeLists.txt files between library and executable

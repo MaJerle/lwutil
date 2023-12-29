@@ -54,7 +54,7 @@ extern "C" {
  * \param[in]       x: Object to get array size of
  * \return          Number of elements in array (`element_count`)
  */
-#define LWUTIL_ARRAYSIZE(x)      (sizeof(x) / sizeof((x)[0]))
+#define LWUTIL_ARRAYSIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 /**
  * \brief           Get larger value out of 2 different inputs
@@ -62,7 +62,7 @@ extern "C" {
  * \param[in]       y: Second input
  * \return          Larger of both inputs
  */
-#define LWUTIL_MAX(x, y)         ((x) > (y) ? (x) : (y))
+#define LWUTIL_MAX(x, y)    ((x) > (y) ? (x) : (y))
 
 /**
  * \brief           Get smaller value out of 2 different inputs
@@ -70,7 +70,7 @@ extern "C" {
  * \param[in]       y: Second input
  * \return          Smaller of both inputs
  */
-#define LWUTIL_MIN(x, y)         ((x) < (y) ? (x) : (y))
+#define LWUTIL_MIN(x, y)    ((x) < (y) ? (x) : (y))
 
 /**
  * \brief           Get absolute value of the input
@@ -84,13 +84,27 @@ extern "C" {
  * \param[in]       x: Input value
  * \return          Absolute value of the input value
  */
-#define LWUTIL_ABS(x)            ((x) < 0 ? -(x) : (x))
+#define LWUTIL_ABS(x)       ((x) < 0 ? -(x) : (x))
 
 /**
  * \brief           Unused variable to avoid compilation warning if declared but not used
  * \param[in]       x: Input variable to declare unused
  */
-#define LWUTIL_UNUSED(x)         (void)(x)
+#define LWUTIL_UNUSED(x)    (void)(x)
+
+/**
+ * \brief           Dereference the pointer and assign the value to it,
+ *                  but only if ptr is not NULL
+ * 
+ * \param[in]       ptr: Pointer to check and assign to
+ * \param[in]       value: Value to assign
+ */
+#define LWUTIL_SET_VALUE_IF_PTR_NOT_NULL(ptr, value)                                                                   \
+    do {                                                                                                               \
+        if ((ptr) != NULL) {                                                                                           \
+            *(ptr) = (value);                                                                                          \
+        }                                                                                                              \
+    } while (0)
 
 #define LWUTIL_CONCAT_BASE(x, y) x##y
 #define LWUTIL_CONCAT(s0, s1)    LWUTIL_CONCAT_BASE(s0, s1)
