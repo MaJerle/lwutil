@@ -176,7 +176,7 @@ extern "C" {
  */
 static inline void
 lwutil_st_u16_le(uint16_t val, void* ptr) {
-    uint8_t* p = ptr;
+    uint8_t* p = (uint8_t*)ptr;
 
     p[0] = (uint8_t)((val >> 0) & 0xFF);
     p[1] = (uint8_t)((val >> 8) & 0xFF);
@@ -189,7 +189,7 @@ lwutil_st_u16_le(uint16_t val, void* ptr) {
  */
 static inline void
 lwutil_st_u32_le(uint32_t val, void* ptr) {
-    uint8_t* p = ptr;
+    uint8_t* p = (uint8_t*)ptr;
 
     p[0] = (uint8_t)((val >> 0) & 0xFF);
     p[1] = (uint8_t)((val >> 8) & 0xFF);
@@ -204,7 +204,7 @@ lwutil_st_u32_le(uint32_t val, void* ptr) {
  */
 static inline uint16_t
 lwutil_ld_u16_le(const void* ptr) {
-    const uint8_t* p = ptr;
+    const uint8_t* p = (const uint8_t*)ptr;
     return p[1] << 8 | p[0];
 }
 
@@ -215,7 +215,7 @@ lwutil_ld_u16_le(const void* ptr) {
  */
 static inline uint32_t
 lwutil_ld_u32_le(const void* ptr) {
-    const uint8_t* p = ptr;
+    const uint8_t* p = (const uint8_t*)ptr;
     return p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
 }
 
@@ -226,7 +226,7 @@ lwutil_ld_u32_le(const void* ptr) {
  */
 static inline void
 lwutil_st_u16_be(uint16_t val, void* ptr) {
-    uint8_t* p = ptr;
+    uint8_t* p = (uint8_t*)ptr;
 
     p[0] = (uint8_t)((val >> 8) & 0xFF);
     p[1] = (uint8_t)((val >> 0) & 0xFF);
@@ -239,7 +239,7 @@ lwutil_st_u16_be(uint16_t val, void* ptr) {
  */
 static inline void
 lwutil_st_u32_be(uint32_t val, void* ptr) {
-    uint8_t* p = ptr;
+    uint8_t* p = (uint8_t*)ptr;
 
     p[0] = (uint8_t)((val >> 24) & 0xFF);
     p[1] = (uint8_t)((val >> 16) & 0xFF);
@@ -254,7 +254,7 @@ lwutil_st_u32_be(uint32_t val, void* ptr) {
  */
 static inline uint16_t
 lwutil_ld_u16_be(const void* ptr) {
-    const uint8_t* p = ptr;
+    const uint8_t* p = (const uint8_t*)ptr;
     return p[0] << 8 | p[1];
 }
 
@@ -265,7 +265,7 @@ lwutil_ld_u16_be(const void* ptr) {
  */
 static inline uint32_t
 lwutil_ld_u32_be(const void* ptr) {
-    const uint8_t* p = ptr;
+    const uint8_t* p = (const uint8_t*)ptr;
     return p[0] << 24 | p[1] << 16 | p[2] << 8 | p[3];
 }
 
