@@ -57,6 +57,17 @@ extern "C" {
 #define LWUTIL_ARRAYSIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 /**
+ * \brief           Get size of statically allocated array
+ * Array must be declared in a form of `type var_name[element_count]`
+ * 
+ * \note            This is an alias of \ref LWUTIL_ARRAYSIZE
+ *
+ * \param[in]       x: Object to get array size of
+ * \return          Number of elements in array (`element_count`)
+ */
+#define LWUTIL_ASZ(x)       LWUTIL_ARRAYSIZE(x)
+
+/**
  * \brief           Get larger value out of 2 different inputs
  * \param[in]       x: First input
  * \param[in]       y: Second input
