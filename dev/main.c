@@ -113,5 +113,46 @@ main(void) {
         len = lwutil_st_u32_varint(86942U, arr, 2);
         TEST_IF_TRUE(len == 0);
     }
+    /* Test min max constrain */
+    {
+        uint32_t val;
+
+        val = LWUTIL_MIN(10, 20);
+        TEST_IF_TRUE(val == 10);
+
+        val = LWUTIL_MAX(10, 20);
+        TEST_IF_TRUE(val == 20);
+
+        val = LWUTIL_MAX(LWUTIL_MIN(10, 20), 30);
+        TEST_IF_TRUE(val == 30);
+
+        val = LWUTIL_MIN(LWUTIL_MAX(10, 20), 30);
+        TEST_IF_TRUE(val == 20);
+
+        val = LWUTIL_CONSTRAIN(10, 20, 30);
+        TEST_IF_TRUE(val == 20);
+
+        val = LWUTIL_CONSTRAIN(20, 10, 30);
+        TEST_IF_TRUE(val == 20);
+
+        val = LWUTIL_CONSTRAIN(20, 25, 30);
+        TEST_IF_TRUE(val == 25);
+
+        val = LWUTIL_CONSTRAIN(20, 35, 30);
+        TEST_IF_TRUE(val == 30);
+    }
+    /* Test map */
+    {
+        uint32_t val;
+
+        /* Map positive scale */
+        val = LWUTIL_MAP(10, 5, 15, 50, 100);
+        TEST_IF_TRUE(val == 75);
+
+        /* Map negative scale */
+        val = LWUTIL_MAP(10, 5, 15, 90, 50);
+        TEST_IF_TRUE(val == 70);
+    }
+    printf("Done\r\n");
     return 0;
 }
