@@ -29,7 +29,7 @@
  * This file is part of LwUTIL - Lightweight utility library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.2.0
+ * Version:         v1.3.0
  */
 #ifndef LWUTIL_HDR_H
 #define LWUTIL_HDR_H
@@ -88,6 +88,7 @@ extern "C" {
  * \param[in]       x: Number to constrain
  * \param[in]       a: Minimum allowed number
  * \param[in]       b: Maximum allowed number
+ * 
  * \return          `x` if `a < x < b`
  * \return          `a` if `x <= a`
  * \return          `b` if `x >= b`
@@ -109,6 +110,10 @@ extern "C" {
  * \note            Data types depend on the user inputs. If high precision is required,
  *                  user can cast the input variables to appropriate type (double or float),
  *                  or use integer types if decimal precision is not required.
+ * 
+ * \note            Input data is not constrained between out min and out max values.
+ *                  This may sometimes be useful for the application. 
+ *                  Use \ref LWUTIL_CONSTRAIN macro to constrain the value
  * 
  * \param[in]       x: Input value to map
  * \param[in]       in_min: Minimum value to map from (input boundary)

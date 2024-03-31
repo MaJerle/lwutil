@@ -1,6 +1,6 @@
 {
     "name": "LwUTIL",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "description": "Lightweight utility functions for daily application development, library that simply works in the project",
     "keywords": "utility, utils, functions, macros, bits, bit, bitwise, string, str, integer, float, double, char, unsigned",
     "repository": {

@@ -29,7 +29,7 @@
  * This file is part of LwUTIL - Lightweight utility library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.2.0
+ * Version:         v1.3.0
  */
 #include <stddef.h>
 #include <stdint.h>

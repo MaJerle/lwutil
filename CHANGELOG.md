@@ -2,8 +2,11 @@
 
 ## Develop
 
+## 1.2.0
+
 - Add `LWUTIL_SET_VALUE_IF_PTR_NOT_NULL`
 - Add `LWUTIL_MAP` and `LWUTIL_CONSTRAIN` functions
+- Add `LWUTIL_ASZ`, a shortcut from `LWUTIL_ARRAYSIZE`
 
 ## 1.2.0
 
