@@ -85,13 +85,17 @@ extern "C" {
 
 /**
  * \brief           Get absolute value of the input
- * Returns always-positive value of the input.
+ *                  Returns always-positive value of the input.
+ * 
  * \note            Special care must be taken when input variable holds
- * minimum value available for given signed integer type (char, int, long, ...).
- * Making absolute value of such input means longer output type requirement.
- * Consider writing result of this function to unsigned type of same integer width.
- * For example, minimum `signed char` value is `-128` while its absolute value (`128`)
- * requires variable type of either `unsigned char` or minimum signed 16-bit (or more).
+ *                  minimum value available for given signed integer type (char, int, long, ...).
+ * 
+ *                  Making absolute value of such input means longer output data type requirement.
+ * 
+ *                  Consider writing result of this function to unsigned type of same integer width.
+ *                  For example, minimum `signed char` value is `-128` while its absolute value (`128`)
+ *                  requires variable type of either `unsigned char` or minimum signed 16-bit (or more).
+ * 
  * \param[in]       x: Input value
  * \return          Absolute value of the input value
  */
@@ -105,7 +109,9 @@ extern "C" {
 
 /**
  * \brief           Dereference the pointer and assign the value to it,
- *                  but only if ptr is not NULL
+ *                  but only if ptr is not NULL.
+ * 
+ * \note            It is fully up to user to handle to correct variable and data types
  * 
  * \param[in]       ptr: Pointer to check and assign to
  * \param[in]       value: Value to assign
@@ -121,8 +127,10 @@ extern "C" {
 #define LWUTIL_CONCAT(s0, s1)    LWUTIL_CONCAT_BASE(s0, s1)
 
 /**
- * \brief           Compile time assert to validate specific expression
+ * \brief           Compile time assert to validate specific expression.
+ *                  Compilation will fail if expression evaluated to zero
  * \note            Can only be used with the integer types
+ * 
  * \param[in]       exp: Expression to test. It must be compile-time evaluation
  * \param[in]       random_variable_name: Meaningful variable name to be used.
  *                      Can be whatever until it is valid variable name
@@ -133,6 +141,7 @@ extern "C" {
 /**
  * \brief           Check if all bits in the `bit_mask` are set in the input value
  * \note            Can only be used with the integer types
+ * 
  * \param[in]       val: Value to check for bits in
  * \param[in]       bit_mask: Bit mask to check in value
  * \return          `1` if all bits are set, `0` otherwise
@@ -142,6 +151,7 @@ extern "C" {
 /**
  * \brief           Check if any of the `bit_mask` bits is set in the input value
  * \note            Can only be used with the integer types
+ * 
  * \param[in]       val: Value to check for bits in
  * \param[in]       bit_mask: Bit mask to check in value
  * \return          `1` if any bit is set, `0` otherwise
@@ -151,6 +161,7 @@ extern "C" {
 /**
  * \brief           Set bit mask in the input value
  * \note            Can only be used with the integer types
+ * 
  * \param[in]       val: Value to set bits in.
  *                      Original input is not modified. It is pass-by-value.
  * \param[in]       bit_mask: Bit mask indicating which bits to set
@@ -161,6 +172,7 @@ extern "C" {
 /**
  * \brief           Clear bit mask in the input value
  * \note            Can only be used with the integer types
+ * 
  * \param[in]       val: Value to clear bits in.
  *                      Original input is not modified. It is pass-by-value.
  * \param[in]       bit_mask: Bit mask indicating which bits to clear
@@ -171,7 +183,8 @@ extern "C" {
 
 /**
  * \brief           Toggle bit mask in the input value
- * Used only for integer types
+ * \note            Can only be used with the integer types
+ * 
  * \param[in]       val: Value to toggle bits in.
  *                      Original input is not modified. It is pass-by-value.
  * \param[in]       bit_mask: Bit mask indicating which bits to toggle
