@@ -54,7 +54,7 @@ extern "C" {
  * \param[in]       x: Object to get array size of
  * \return          Number of elements in array (`element_count`)
  */
-#define LWUTIL_ARRAYSIZE(x) (sizeof(x) / sizeof((x)[0]))
+#define LWUTIL_ARRAYSIZE(x)       (sizeof(x) / sizeof((x)[0]))
 
 /**
  * \brief           Get size of statically allocated array
@@ -65,7 +65,7 @@ extern "C" {
  * \param[in]       x: Object to get array size of
  * \return          Number of elements in array (`element_count`)
  */
-#define LWUTIL_ASZ(x)       LWUTIL_ARRAYSIZE(x)
+#define LWUTIL_ASZ(x)             LWUTIL_ARRAYSIZE(x)
 
 /**
  * \brief           Get larger value out of 2 different inputs
@@ -73,7 +73,7 @@ extern "C" {
  * \param[in]       y: Second input
  * \return          Larger of both inputs
  */
-#define LWUTIL_MAX(x, y)    ((x) > (y) ? (x) : (y))
+#define LWUTIL_MAX(x, y)          ((x) > (y) ? (x) : (y))
 
 /**
  * \brief           Get smaller value out of 2 different inputs
@@ -81,7 +81,44 @@ extern "C" {
  * \param[in]       y: Second input
  * \return          Smaller of both inputs
  */
-#define LWUTIL_MIN(x, y)    ((x) < (y) ? (x) : (y))
+#define LWUTIL_MIN(x, y)          ((x) < (y) ? (x) : (y))
+
+/**
+ * \brief           Constrains an input number within a range
+ * \param[in]       x: Number to constrain
+ * \param[in]       a: Minimum allowed number
+ * \param[in]       b: Maximum allowed number
+ * \return          `x` if `a < x < b`
+ * \return          `a` if `x <= a`
+ * \return          `b` if `x >= b`
+ * 
+ * \note            Function does not check if `a < b`. This must be handled by the user.
+ * \note            This is implemented as macro and return data type depends on the input number types.
+ */
+#define LWUTIL_CONSTRAIN(x, a, b) LWUTIL_MIN(LWUTIL_MAX((x), (a)), (b))
+
+/**
+ * \brief           Maps the input number with the min and max range to the map of the output min and max range
+ * 
+ *                  Mathematical calculation is:
+ * 
+ *                       (x - in_min) * (out_max - out_min)
+ *                  y = ------------------------------------ + out_min
+ *                                (in_max - in_min)  
+ *
+ * \note            Data types depend on the user inputs. If high precision is required,
+ *                  user can cast the input variables to appropriate type (double or float),
+ *                  or use integer types if decimal precision is not required.
+ * 
+ * \param[in]       x: Input value to map
+ * \param[in]       in_min: Minimum value to map from (input boundary)
+ * \param[in]       in_max: Maximum value to map from (input boundary)
+ * \param[in]       out_min: Minimum value to map to (output boundary)
+ * \param[in]       out_max: Maximum value to map to (output boundary)
+ * \return          Mapped value
+ */
+#define LWUTIL_MAP(x, in_min, in_max, out_min, out_max)                                                                \
+    (((x) - (in_min)) * ((out_max) - (out_min)) / ((in_max) - (in_min)) + (out_min))
 
 /**
  * \brief           Get absolute value of the input
@@ -99,13 +136,13 @@ extern "C" {
  * \param[in]       x: Input value
  * \return          Absolute value of the input value
  */
-#define LWUTIL_ABS(x)       ((x) < 0 ? -(x) : (x))
+#define LWUTIL_ABS(x)    ((x) < 0 ? -(x) : (x))
 
 /**
  * \brief           Unused variable to avoid compilation warning if declared but not used
  * \param[in]       x: Input variable to declare unused
  */
-#define LWUTIL_UNUSED(x)    (void)(x)
+#define LWUTIL_UNUSED(x) (void)(x)
 
 /**
  * \brief           Dereference the pointer and assign the value to it,

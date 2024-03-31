@@ -3,6 +3,7 @@
 ## Develop
 
 - Add `LWUTIL_SET_VALUE_IF_PTR_NOT_NULL`
+- Add `LWUTIL_MAP` and `LWUTIL_CONSTRAIN` functions
 
 ## 1.2.0
 
