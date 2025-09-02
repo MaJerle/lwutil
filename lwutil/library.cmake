@@ -25,8 +25,8 @@ set(lwutil_include_DIRS
 )
 
 # Register library to the system
-add_library(lwutil INTERFACE)
-target_sources(lwutil INTERFACE ${lwutil_core_SRCS})
-target_include_directories(lwutil INTERFACE ${lwutil_include_DIRS})
+add_library(lwutil)
+target_sources(lwutil PRIVATE ${lwutil_core_SRCS})
+target_include_directories(lwutil PUBLIC ${lwutil_include_DIRS})
 target_compile_options(lwutil PRIVATE ${LWUTIL_COMPILE_OPTIONS})
 target_compile_definitions(lwutil PRIVATE ${LWUTIL_COMPILE_DEFINITIONS})

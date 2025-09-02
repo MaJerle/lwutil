@@ -2,6 +2,11 @@
 
 ## Develop
 
+## 1.4.0
+
+- Rework library CMake with removed INTERFACE type
+- Add extended loading/storing option
+
 ## 1.3.0
 
 - Add `LWUTIL_SET_VALUE_IF_PTR_NOT_NULL`
