@@ -156,3 +156,40 @@ lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len) {
     }
     return cnt;
 }
+
+/**
+ * \brief           Check the the time between time now and time variable
+ *                  is greater than the defined time_period.
+ * 
+ * When it is, the time_variable is updated accordingly, following the `2` possible scenarios:
+ *  - Delta time is less than 2x period, the time variable is increased by period
+ *  - Delta time is more than 2x period, the time variable is set to current time
+ * 
+ * The check if: (time_now - *time_variable) >= time_period
+ * 
+ * \note            This is the 32-bit time variant
+ * 
+ * \param           time_now: Current time. It can be in ms or any other unit, as long as all variables hold same unit
+ * \param           time_variable: Time variable to check against. It is a pointer to the variable
+ * \param           time_period: Time period to check against
+ * \return          `1` is time elapsed, `0` otherwise  
+ */
+uint8_t
+lwutil_tutil_has_elapsed(const uint32_t time_now, uint32_t* const time_variable, const uint32_t time_period) {
+    uint8_t retval = 0;
+
+    if (time_variable != NULL) {
+        const uint32_t delta = time_now - *time_variable;
+        if (delta >= time_period) {
+            retval = 1;
+
+            if (delta >= 2 * time_period) {
+                *time_variable = time_now;
+            } else {
+                *time_variable += time_period;
+            }
+        }
+    }
+
+    return retval;
+}

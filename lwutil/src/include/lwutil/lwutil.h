@@ -465,6 +465,9 @@ void lwutil_u32_to_8asciis(uint32_t hex, char* ascii);
 uint8_t lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out);
 uint8_t lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len);
 
+/* Time utilities */
+uint8_t lwutil_tutil_has_elapsed(uint32_t time_now, uint32_t* time_variable, uint32_t time_period);
+
 /**
  * \}
  */

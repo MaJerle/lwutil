@@ -277,5 +277,44 @@ test_run(void) {
         val = LWUTIL_MAP(10, 5, 15, 90, 50);
         TEST_IF_TRUE(val == 70);
     }
+    /* Test time period */
+    {
+        uint32_t time_now, time_variable;
+        uint8_t val;
+
+        time_variable = 0;
+        time_now = 0;
+
+        /* Initial stage */
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 0);
+
+        /* Set the time, expect the time variable to match */
+        time_now = 500;
+        time_variable = 0;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 500);
+
+        /* 
+         * Set the time above the target but not too much
+         * We expect time variable to advance for the period
+         */
+        time_now = 600;
+        time_variable = 0;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 500);
+
+        /* 
+         * Set the time above the target but not too much
+         * We expect time variable to advance for the period
+         */
+        time_now = 1100;
+        time_variable = 0;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 1100);
+    }
     return retval;
 }
