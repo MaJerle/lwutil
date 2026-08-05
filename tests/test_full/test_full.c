@@ -279,125 +279,92 @@ test_run(void) {
     }
     /* Test time period */
     {
-        uint32_t time_now, time_variable;
+        uint32_t time_now, time_last;
         uint8_t val;
 
-        time_variable = 0;
+        typedef struct {
+            uint32_t time_now;
+            uint32_t time_expected;
+            uint32_t val_expected;
+        } test_time_tutil_data_t;
+
+        /* Restart the calls*/
+        time_last = 0;
         time_now = 0;
 
-        /* Initial stage */
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        /* Initial stage, time not elapsed */
+        val = lwutil_tutil_has_elapsed(time_now, &time_last, 500);
         TEST_IF_TRUE(val == 0);
 
         /* Set the time, expect the time variable to match */
         time_now = 500;
-        time_variable = 0;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        time_last = 0;
+        val = lwutil_tutil_has_elapsed(time_now, &time_last, 500);
         TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 500);
+        TEST_IF_TRUE(time_last == 500);
 
         /* 
          * Set the time above the target but not too much
          * We expect time variable to advance for the period
          */
         time_now = 600;
-        time_variable = 0;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        time_last = 0;
+        val = lwutil_tutil_has_elapsed(time_now, &time_last, 500);
         TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 500);
+        TEST_IF_TRUE(time_last == 500);
 
         /* 
-         * Set the time above the target but not too much
-         * We expect time variable to advance for the period
+         * Set the time above the target, much above (2* the target above),
+         * we now expect time_last to match the time_now to resync back
          */
         time_now = 1100;
-        time_variable = 0;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        time_last = 0;
+        val = lwutil_tutil_has_elapsed(time_now, &time_last, 500);
         TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 1100);
-    }
-    /* Test time period - behavior across repeated calls sharing the same time_variable */
-    {
-        uint32_t time_now, time_variable;
-        uint8_t val;
-
-        /* Two consecutive calls before the period elapses -> stays not-elapsed, variable untouched */
-        time_variable = 0;
-        time_now = 100;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 0);
-        TEST_IF_TRUE(time_variable == 0);
-
-        time_now = 400;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 0);
-        TEST_IF_TRUE(time_variable == 0);
+        TEST_IF_TRUE(time_last == 1100);
 
         /*
-         * Successive calls exactly on period, simulating a periodic timer.
-         * Each call advances time_variable by period, so ticks stay drift-free.
+         * Test data assumes step is 500ms
          */
-        time_variable = 0;
-        time_now = 500;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 500);
+        const test_time_tutil_data_t data_entries[] = {
+            //{.time_now = 0, .time_expected = 0, .val_expected = 0},
+            {0U, 0U, 0U},       // Starting point
+            {200, 0U, 0U},      // First 200ms
+            {400, 0U, 0U},      // Another 400ms
+            {600U, 500U, 1U},   // First elapse happens here
+            {800U, 500U, 0U},   // No new elapse
+            {1000U, 1000U, 1U}, // 1000 reached, elapse triggered
+            {1750U, 1500U, 1U}, // Another elapsed reached
+            {2750U, 2750U, 1U}, // Elapsed reached, but this time it is at least 2x the delta, so make it equal
+            {3000U, 2750U, 0U}, // No elapse since last check
+            {3250U, 3250U, 1U}, // Elapse happened
 
-        time_now = 1000;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 1000);
+            /* Add here the cases for overflow situation */
+            {0xFFFFFFF0U, 0xFFFFFFF0U, 1U}, //Elapse happened from the previous run, large gap, make it equal
+            {0U, 0xFFFFFFF0U, 0U},          //Overflow happens here
+            {500U, 484U, 1U},               // Elapse after 500
+            {500U, 484U, 0U},               // No new elapse
+        };
 
-        time_now = 1500;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 1500);
+        /* Starting point goes here */
+        time_now = 0UL;
+        time_last = 0UL;
+        val = 0U;
+        for (size_t idx = 0; idx < (sizeof(data_entries) / sizeof(data_entries[0])); ++idx) {
+            const test_time_tutil_data_t* entry = &data_entries[idx];
 
-        /* An elapsed call followed by a not-yet-elapsed one must not disturb time_variable */
-        time_variable = 0;
-        time_now = 500;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 500);
-
-        time_now = 700; /* delta = 200, below period */
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 0);
-        TEST_IF_TRUE(time_variable == 500);
-
-        time_now = 1000; /* delta = 500 since last update -> elapsed again */
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 1000);
-
-        /* Large jump (resync) followed by normal periodic ticking */
-        time_variable = 0;
-        time_now = 5000; /* delta = 5000 >= 2 * period -> resync to time_now */
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 5000);
-
-        time_now = 5500; /* delta = 500 -> back to normal period-advance behavior */
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 5500);
-
-        /* uint32_t wrap-around must be handled since the subtraction is unsigned */
-        time_variable = 0xFFFFFFF0U;
-        time_now = 0xFFFFFFF0U;
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 0);
-        TEST_IF_TRUE(time_variable == 0xFFFFFFF0U);
-
-        time_now = 20U; /* wrapped past 0xFFFFFFFF, delta = 36 */
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 0);
-        TEST_IF_TRUE(time_variable == 0xFFFFFFF0U);
-
-        time_now = 500U; /* delta = 516 (wrapped) -> elapsed, advances by period (wraps too) */
-        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
-        TEST_IF_TRUE(val == 1);
-        TEST_IF_TRUE(time_variable == 484U);
+            /* Set the time, call the elapsed, check the outcome */
+            time_now = entry->time_now;
+            val = lwutil_tutil_has_elapsed(time_now, &time_last, 500U);
+            if (val != entry->val_expected) {
+                printf("Test failed: Line: %u, val: %u (expected: %u), time_now: %u, time_last: %u (expected: %u), "
+                       "data array index: %u",
+                       (int)__LINE__, (unsigned)val, (unsigned)entry->val_expected, (unsigned)time_now,
+                       (unsigned)time_last, (unsigned)entry->time_expected, (unsigned)idx);
+            }
+            TEST_IF_TRUE(val == entry->val_expected);
+            TEST_IF_TRUE(time_last == entry->time_expected);
+        }
     }
     return retval;
 }

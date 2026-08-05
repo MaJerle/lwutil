@@ -165,7 +165,20 @@ lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len) {
  *  - Delta time is less than 2x period, the time variable is increased by period, to keep the drift-free updates
  *  - Delta time is more than 2x period, the time variable is set to current time, to resync the drift
  * 
- * The check if: (time_now - *time_variable) >= time_period
+ * The check if: `(time_now - *time_variable) >= time_period`
+ * 
+ * The function can be used as follows:
+ * 
+ * ```c
+ * //At the top somewhere
+ * static uint32_t time_last;
+ * 
+ * //Later periodically in the function calls
+ * if (lwutil_tutil_has_elapsed(time_now, &time_last, 500)) {
+ *  // Do something if time_now - time_last is at least 500 units apart
+ *  // will also update the time_last to either +500, or to the time_now, depending on the delta
+ * }
+ * ```
  * 
  * \note            This is the 32-bit time variant
  * 
