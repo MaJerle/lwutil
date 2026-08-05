@@ -162,8 +162,8 @@ lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len) {
  *                  is greater than the defined time_period.
  * 
  * When it is, the time_variable is updated accordingly, following the `2` possible scenarios:
- *  - Delta time is less than 2x period, the time variable is increased by period
- *  - Delta time is more than 2x period, the time variable is set to current time
+ *  - Delta time is less than 2x period, the time variable is increased by period, to keep the drift-free updates
+ *  - Delta time is more than 2x period, the time variable is set to current time, to resync the drift
  * 
  * The check if: (time_now - *time_variable) >= time_period
  * 

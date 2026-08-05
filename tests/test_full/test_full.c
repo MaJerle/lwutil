@@ -316,5 +316,88 @@ test_run(void) {
         TEST_IF_TRUE(val == 1);
         TEST_IF_TRUE(time_variable == 1100);
     }
+    /* Test time period - behavior across repeated calls sharing the same time_variable */
+    {
+        uint32_t time_now, time_variable;
+        uint8_t val;
+
+        /* Two consecutive calls before the period elapses -> stays not-elapsed, variable untouched */
+        time_variable = 0;
+        time_now = 100;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 0);
+        TEST_IF_TRUE(time_variable == 0);
+
+        time_now = 400;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 0);
+        TEST_IF_TRUE(time_variable == 0);
+
+        /*
+         * Successive calls exactly on period, simulating a periodic timer.
+         * Each call advances time_variable by period, so ticks stay drift-free.
+         */
+        time_variable = 0;
+        time_now = 500;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 500);
+
+        time_now = 1000;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 1000);
+
+        time_now = 1500;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 1500);
+
+        /* An elapsed call followed by a not-yet-elapsed one must not disturb time_variable */
+        time_variable = 0;
+        time_now = 500;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 500);
+
+        time_now = 700; /* delta = 200, below period */
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 0);
+        TEST_IF_TRUE(time_variable == 500);
+
+        time_now = 1000; /* delta = 500 since last update -> elapsed again */
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 1000);
+
+        /* Large jump (resync) followed by normal periodic ticking */
+        time_variable = 0;
+        time_now = 5000; /* delta = 5000 >= 2 * period -> resync to time_now */
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 5000);
+
+        time_now = 5500; /* delta = 500 -> back to normal period-advance behavior */
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 5500);
+
+        /* uint32_t wrap-around must be handled since the subtraction is unsigned */
+        time_variable = 0xFFFFFFF0U;
+        time_now = 0xFFFFFFF0U;
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 0);
+        TEST_IF_TRUE(time_variable == 0xFFFFFFF0U);
+
+        time_now = 20U; /* wrapped past 0xFFFFFFFF, delta = 36 */
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 0);
+        TEST_IF_TRUE(time_variable == 0xFFFFFFF0U);
+
+        time_now = 500U; /* delta = 516 (wrapped) -> elapsed, advances by period (wraps too) */
+        val = lwutil_tutil_has_elapsed(time_now, &time_variable, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_variable == 484U);
+    }
     return retval;
 }
