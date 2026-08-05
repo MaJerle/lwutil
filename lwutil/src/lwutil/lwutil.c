@@ -196,7 +196,14 @@ lwutil_tutil_has_elapsed(const uint32_t time_now, uint32_t* const time_variable,
         if (delta >= time_period) {
             retval = 1;
 
-            if (delta >= 2 * time_period) {
+            /*
+             * When the delta is much larger than the period,
+             * we set the time to the new time, and not to the time_period aligned time_variable
+             * 
+             * This is to simplify the process or else we would enter into the
+             * remainder arithmetic which might be slow for small CPUs
+             */
+            if (delta >= (2 * time_period)) {
                 *time_variable = time_now;
             } else {
                 *time_variable += time_period;
