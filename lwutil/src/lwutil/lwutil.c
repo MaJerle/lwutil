@@ -100,6 +100,7 @@ lwutil_u32_to_8asciis(uint32_t hex, char* ascii) {
  */
 uint8_t
 lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out) {
+    const size_t max_bytes = 5;
     size_t cnt = 0;
     uint32_t val = 0;
     const uint8_t* p_data = ptr;
@@ -112,7 +113,7 @@ lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out) {
         byt = *p_data++;
         val |= ((uint32_t)(byt & 0x7FU)) << (cnt * 7U);
         ++cnt;
-    } while (--ptr_len > 0 && (byt & 0x80U) > 0);
+    } while (--ptr_len > 0 && cnt < max_bytes && (byt & 0x80U) > 0);
 
     /* Check memory length */
     if ((byt & 0x80U) > 0) {

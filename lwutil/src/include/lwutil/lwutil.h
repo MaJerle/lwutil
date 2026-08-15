@@ -72,6 +72,9 @@ extern "C" {
  * \param[in]       x: First input
  * \param[in]       y: Second input
  * \return          Larger of both inputs
+ *
+ * \warning         `x` and `y` may each be evaluated more than once.
+ *                  Do not pass expressions with side effects (eg. `i++`, `*p++`, function calls with side effects).
  */
 #define LWUTIL_MAX(x, y)          ((x) > (y) ? (x) : (y))
 
@@ -80,6 +83,9 @@ extern "C" {
  * \param[in]       x: First input
  * \param[in]       y: Second input
  * \return          Smaller of both inputs
+ *
+ * \warning         `x` and `y` may each be evaluated more than once.
+ *                  Do not pass expressions with side effects (eg. `i++`, `*p++`, function calls with side effects).
  */
 #define LWUTIL_MIN(x, y)          ((x) < (y) ? (x) : (y))
 
@@ -88,13 +94,16 @@ extern "C" {
  * \param[in]       x: Number to constrain
  * \param[in]       a: Minimum allowed number
  * \param[in]       b: Maximum allowed number
- * 
+ *
  * \return          `x` if `a < x < b`
  * \return          `a` if `x <= a`
  * \return          `b` if `x >= b`
- * 
+ *
  * \note            Function does not check if `a < b`. This must be handled by the user.
  * \note            This is implemented as macro and return data type depends on the input number types.
+ *
+ * \warning         `x` may be evaluated up to twice (it expands to nested \ref LWUTIL_MIN / \ref LWUTIL_MAX calls).
+ *                  Do not pass expressions with side effects.
  */
 #define LWUTIL_CONSTRAIN(x, a, b) LWUTIL_MIN(LWUTIL_MAX((x), (a)), (b))
 
@@ -121,6 +130,8 @@ extern "C" {
  * \param[in]       out_min: Minimum value to map to (output boundary)
  * \param[in]       out_max: Maximum value to map to (output boundary)
  * \return          Mapped value
+ *
+ * \warning         Every argument may be evaluated more than once. Do not pass expressions with side effects.
  */
 #define LWUTIL_MAP(x, in_min, in_max, out_min, out_max)                                                                \
     (((x) - (in_min)) * ((out_max) - (out_min)) / ((in_max) - (in_min)) + (out_min))
@@ -140,6 +151,8 @@ extern "C" {
  * 
  * \param[in]       x: Input value
  * \return          Absolute value of the input value
+ *
+ * \warning         `x` may be evaluated twice. Do not pass expressions with side effects.
  */
 #define LWUTIL_ABS(x)    ((x) < 0 ? -(x) : (x))
 
@@ -178,7 +191,7 @@ extern "C" {
  *                      Can be whatever until it is valid variable name
  */
 #define LWUTIL_COMPILE_TIME_ASSERT(exp, random_variable_name)                                                          \
-    typedef char LWUTIL_CONCAT2(random_variable_name, __LINE__)[!(exp) ? -1 : 1];
+    typedef char LWUTIL_CONCAT(random_variable_name, __LINE__)[!(exp) ? -1 : 1];
 
 /**
  * \brief           Check if all bits in the `bit_mask` are set in the input value
@@ -271,18 +284,18 @@ lwutil_st_u32_le(uint32_t val, void* ptr) {
 static inline uint16_t
 lwutil_ld_u16_le(const void* ptr) {
     const uint8_t* p = (const uint8_t*)ptr;
-    return p[1] << 8 | p[0];
+    return (uint16_t)((uint16_t)p[1] << 8 | p[0]);
 }
 
 /**
  * \brief           Load `32-bit` value from bytes array in little-endian format
- * \param[in]       ptr: Minimum `2-bytes` long input array to extract bytes from
+ * \param[in]       ptr: Minimum `4-bytes` long input array to extract bytes from
  * \return          `32-bit` value extracted from input array
  */
 static inline uint32_t
 lwutil_ld_u32_le(const void* ptr) {
     const uint8_t* p = (const uint8_t*)ptr;
-    return p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
+    return (uint32_t)p[3] << 24 | (uint32_t)p[2] << 16 | (uint32_t)p[1] << 8 | (uint32_t)p[0];
 }
 
 /**
@@ -321,7 +334,7 @@ lwutil_st_u32_be(uint32_t val, void* ptr) {
 static inline uint16_t
 lwutil_ld_u16_be(const void* ptr) {
     const uint8_t* p = (const uint8_t*)ptr;
-    return p[0] << 8 | p[1];
+    return (uint16_t)((uint16_t)p[0] << 8 | p[1]);
 }
 
 /**
@@ -332,7 +345,7 @@ lwutil_ld_u16_be(const void* ptr) {
 static inline uint32_t
 lwutil_ld_u32_be(const void* ptr) {
     const uint8_t* p = (const uint8_t*)ptr;
-    return p[0] << 24 | p[1] << 16 | p[2] << 8 | p[3];
+    return (uint32_t)p[0] << 24 | (uint32_t)p[1] << 16 | (uint32_t)p[2] << 8 | (uint32_t)p[3];
 }
 
 /**
@@ -380,21 +393,21 @@ static inline uint16_t
 lwutil_ld_u16_le_ex(const void** ptr) {
     const uint8_t* p = (const uint8_t*)(*ptr);
     *ptr = (uint8_t*)(*ptr) + 2;
-    return p[1] << 8 | p[0];
+    return (uint16_t)((uint16_t)p[1] << 8 | p[0]);
 }
 
 /**
  * \brief           Load `32-bit` value from bytes array in little-endian format
  * \note            Extended version, accepts the pointer to pointer and modifies the address pointer points to.
  *                  Input pointer will point after the used bytes
- * \param[in]       ptr: Minimum `2-bytes` long input array to extract bytes from
+ * \param[in]       ptr: Minimum `4-bytes` long input array to extract bytes from
  * \return          `32-bit` value extracted from input array
  */
 static inline uint32_t
 lwutil_ld_u32_le_ex(const void** ptr) {
     const uint8_t* p = (const uint8_t*)(*ptr);
     *ptr = (uint8_t*)(*ptr) + 4;
-    return p[3] << 24 | p[2] << 16 | p[1] << 8 | p[0];
+    return (uint32_t)p[3] << 24 | (uint32_t)p[2] << 16 | (uint32_t)p[1] << 8 | (uint32_t)p[0];
 }
 
 /**
@@ -442,7 +455,7 @@ static inline uint16_t
 lwutil_ld_u16_be_ex(const void** ptr) {
     const uint8_t* p = (const uint8_t*)(*ptr);
     *ptr = (uint8_t*)(*ptr) + 2;
-    return p[0] << 8 | p[1];
+    return (uint16_t)((uint16_t)p[0] << 8 | p[1]);
 }
 
 /**
@@ -456,7 +469,7 @@ static inline uint32_t
 lwutil_ld_u32_be_ex(const void** ptr) {
     const uint8_t* p = (const uint8_t*)(*ptr);
     *ptr = (uint8_t*)(*ptr) + 4;
-    return p[0] << 24 | p[1] << 16 | p[2] << 8 | p[3];
+    return (uint32_t)p[0] << 24 | (uint32_t)p[1] << 16 | (uint32_t)p[2] << 8 | (uint32_t)p[3];
 }
 
 void lwutil_u8_to_2asciis(uint8_t hex, char* ascii);
