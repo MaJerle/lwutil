@@ -8,6 +8,14 @@
         retval = -1;                                                                                                   \
     }
 
+/*
+ * Compile-time regression guard: LWUTIL_COMPILE_TIME_ASSERT must actually compile.
+ * It previously expanded to a nonexistent LWUTIL_CONCAT2 macro and failed to build
+ * whenever used, but nothing in the test suite ever invoked it, so the break went unnoticed.
+ */
+LWUTIL_COMPILE_TIME_ASSERT(sizeof(uint16_t) == 2, u16_size_check)
+LWUTIL_COMPILE_TIME_ASSERT(sizeof(uint32_t) == 4, u32_size_check)
+
 int
 test_run(void) {
     int retval = 0;
@@ -162,6 +170,38 @@ test_run(void) {
         TEST_IF_TRUE(u32_2 == 0xDEADBEEFU);
         TEST_IF_TRUE(ptr == &arr[8]);
     }
+    /*
+     * Regression guard for the signed left-shift overflow fix: the byte that lands
+     * in the top-most shifted position (<<8 for 16-bit, <<24 for 32-bit) must have
+     * its top bit set, since that is exactly what triggered the undefined behavior.
+     */
+    {
+        uint8_t arr_ff16[2] = {0xFFU, 0xFFU};
+        uint8_t arr_ff32[4] = {0xFFU, 0xFFU, 0xFFU, 0xFFU};
+        uint8_t arr_le16[2] = {0x01U, 0xFFU};
+        uint8_t arr_be16[2] = {0xFFU, 0x01U};
+        uint8_t arr_le32[4] = {0x01U, 0x02U, 0x03U, 0xFFU};
+        uint8_t arr_be32[4] = {0xFFU, 0x02U, 0x03U, 0x04U};
+        uint8_t arr[4];
+
+        /* All-max-value round trip */
+        TEST_IF_TRUE(lwutil_ld_u16_le(arr_ff16) == 0xFFFFU);
+        TEST_IF_TRUE(lwutil_ld_u16_be(arr_ff16) == 0xFFFFU);
+        TEST_IF_TRUE(lwutil_ld_u32_le(arr_ff32) == 0xFFFFFFFFU);
+        TEST_IF_TRUE(lwutil_ld_u32_be(arr_ff32) == 0xFFFFFFFFU);
+
+        /* Byte with the top bit set placed specifically in the shifted position */
+        TEST_IF_TRUE(lwutil_ld_u16_le(arr_le16) == 0xFF01U);
+        TEST_IF_TRUE(lwutil_ld_u16_be(arr_be16) == 0xFF01U);
+        TEST_IF_TRUE(lwutil_ld_u32_le(arr_le32) == 0xFF030201U);
+        TEST_IF_TRUE(lwutil_ld_u32_be(arr_be32) == 0xFF020304U);
+
+        /* Store + load round trip of the max value */
+        lwutil_st_u16_le(0xFFFFU, arr);
+        TEST_IF_TRUE(lwutil_ld_u16_le(arr) == 0xFFFFU);
+        lwutil_st_u32_le(0xFFFFFFFFU, arr);
+        TEST_IF_TRUE(lwutil_ld_u32_le(arr) == 0xFFFFFFFFU);
+    }
     /* Bit set/reset */
     {
         uint32_t val;
@@ -173,6 +213,11 @@ test_run(void) {
 
         val = lwutil_bits_toggle(0x1234U, 0xFFU);
         TEST_IF_TRUE(val == (0x1234U ^ 0xFFU));
+
+        TEST_IF_TRUE(lwutil_bits_is_set_all(0x0FU, 0x0FU) == 1);
+        TEST_IF_TRUE(lwutil_bits_is_set_all(0x0FU, 0x1FU) == 0);
+        TEST_IF_TRUE(lwutil_bits_is_set_any(0x0FU, 0x10U) == 0);
+        TEST_IF_TRUE(lwutil_bits_is_set_any(0x0FU, 0x18U) == 1);
     }
     /* ASCII operations */
     {
@@ -237,6 +282,97 @@ test_run(void) {
         len = lwutil_st_u32_varint(86942U, arr, 2);
         TEST_IF_TRUE(len == 0);
     }
+    /* Test variable integer parsed from a byte stream, one after another */
+    {
+        /* 300 (0xAC, 0x02), then 86942 (0x9E, 0xA7, 0x05), little endian varints back to back */
+        uint8_t arr[10] = {0xACU, 0x02U, 0x9EU, 0xA7U, 0x05U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U};
+        const uint8_t* p = arr;
+        size_t remaining = sizeof(arr);
+        uint32_t val;
+        uint8_t used;
+
+        /* First call sees the whole remaining stream, not just its own varint's bytes */
+        used = lwutil_ld_u32_varint(p, remaining, &val);
+        TEST_IF_TRUE(used == 2U);
+        TEST_IF_TRUE(val == 300U);
+        p += used;
+        remaining -= used;
+
+        /* Second call continues from where the first one stopped */
+        used = lwutil_ld_u32_varint(p, remaining, &val);
+        TEST_IF_TRUE(used == 3U);
+        TEST_IF_TRUE(val == 86942U);
+        p += used;
+        remaining -= used;
+    }
+    /* Test variable integer with malformed (never-ending continuation bit) stream */
+    {
+        /* Every byte has bit 0x80 set, no valid terminator within (or beyond) the 5-byte limit */
+        uint8_t arr[10] = {0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU};
+        uint32_t val;
+        uint8_t used;
+
+        /* Must be rejected as an error, and must never read/shift past the 5-byte limit */
+        used = lwutil_ld_u32_varint(arr, sizeof(arr), &val);
+        TEST_IF_TRUE(used == 0U);
+        TEST_IF_TRUE(val == 0U);
+    }
+    /* Test variable integer NULL / zero-length argument handling */
+    {
+        uint8_t arr[10] = {0x01U};
+        uint32_t val = 0xAAAAAAAAU;
+        uint8_t used;
+
+        used = lwutil_ld_u32_varint(NULL, sizeof(arr), &val);
+        TEST_IF_TRUE(used == 0U);
+
+        used = lwutil_ld_u32_varint(arr, 0, &val);
+        TEST_IF_TRUE(used == 0U);
+
+        used = lwutil_ld_u32_varint(arr, sizeof(arr), NULL);
+        TEST_IF_TRUE(used == 0U);
+
+        used = lwutil_st_u32_varint(123U, NULL, sizeof(arr));
+        TEST_IF_TRUE(used == 0U);
+
+        used = lwutil_st_u32_varint(123U, arr, 0);
+        TEST_IF_TRUE(used == 0U);
+    }
+    /* Test variable integer boundary values, at each 7-bit continuation rollover */
+    {
+        static const uint32_t boundary_values[] = {
+            0U, 127U, 128U, 16383U, 16384U, 2097151U, 2097152U, 268435455U, 268435456U, 0xFFFFFFFFU,
+        };
+        uint8_t arr[8];
+        uint32_t val;
+        uint8_t st_len, ld_len;
+
+        for (size_t idx = 0; idx < LWUTIL_ARRAYSIZE(boundary_values); ++idx) {
+            memset(arr, 0xCCU, sizeof(arr));
+            st_len = lwutil_st_u32_varint(boundary_values[idx], arr, sizeof(arr));
+            TEST_IF_TRUE(st_len > 0U && st_len <= 5U);
+
+            val = 0;
+            ld_len = lwutil_ld_u32_varint(arr, sizeof(arr), &val);
+            TEST_IF_TRUE(ld_len == st_len);
+            TEST_IF_TRUE(val == boundary_values[idx]);
+        }
+
+        /* Explicit byte-level anchors at both ends of the range */
+        memset(arr, 0xCCU, sizeof(arr));
+        st_len = lwutil_st_u32_varint(0U, arr, sizeof(arr));
+        TEST_IF_TRUE(st_len == 1U);
+        TEST_IF_TRUE(arr[0] == 0x00U);
+
+        memset(arr, 0xCCU, sizeof(arr));
+        st_len = lwutil_st_u32_varint(0xFFFFFFFFU, arr, sizeof(arr));
+        TEST_IF_TRUE(st_len == 5U);
+        TEST_IF_TRUE(arr[0] == 0xFFU);
+        TEST_IF_TRUE(arr[1] == 0xFFU);
+        TEST_IF_TRUE(arr[2] == 0xFFU);
+        TEST_IF_TRUE(arr[3] == 0xFFU);
+        TEST_IF_TRUE(arr[4] == 0x0FU);
+    }
     /* Test min max constrain */
     {
         uint32_t val;
@@ -276,6 +412,122 @@ test_run(void) {
         /* Map negative scale */
         val = LWUTIL_MAP(10, 5, 15, 90, 50);
         TEST_IF_TRUE(val == 70);
+    }
+    /* Test array size and absolute value macros */
+    {
+        uint32_t arr5[5];
+        uint8_t arr9[9];
+
+        TEST_IF_TRUE(LWUTIL_ARRAYSIZE(arr5) == 5U);
+        TEST_IF_TRUE(LWUTIL_ASZ(arr9) == 9U);
+
+        TEST_IF_TRUE(LWUTIL_ABS(-5) == 5);
+        TEST_IF_TRUE(LWUTIL_ABS(5) == 5);
+        TEST_IF_TRUE(LWUTIL_ABS(0) == 0);
+    }
+    /* Test set value if pointer not NULL */
+    {
+        int32_t val = -1;
+
+        LWUTIL_SET_VALUE_IF_PTR_NOT_NULL(&val, 42);
+        TEST_IF_TRUE(val == 42);
+
+        /* Must not crash or write anywhere when the pointer is NULL */
+        LWUTIL_SET_VALUE_IF_PTR_NOT_NULL((int32_t*)NULL, 100);
+        TEST_IF_TRUE(val == 42);
+    }
+    /* Test time period */
+    {
+        uint32_t time_now, time_last;
+        uint8_t val;
+
+        typedef struct {
+            uint32_t time_now;
+            uint32_t time_expected;
+            uint32_t val_expected;
+        } test_time_tutil_data_t;
+
+        /* NULL time_variable must be rejected without crashing */
+        val = lwutil_tutil_has_elapsed(1000U, NULL, 500U);
+        TEST_IF_TRUE(val == 0);
+
+        /* Restart the calls*/
+        time_last = 0;
+        time_now = 0;
+
+        /* Initial stage, time not elapsed */
+        val = lwutil_tutil_has_elapsed(time_now, &time_last, 500);
+        TEST_IF_TRUE(val == 0);
+
+        /* Set the time, expect the time variable to match */
+        time_now = 500;
+        time_last = 0;
+        val = lwutil_tutil_has_elapsed(time_now, &time_last, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_last == 500);
+
+        /* 
+         * Set the time above the target but not too much
+         * We expect time variable to advance for the period
+         */
+        time_now = 600;
+        time_last = 0;
+        val = lwutil_tutil_has_elapsed(time_now, &time_last, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_last == 500);
+
+        /* 
+         * Set the time above the target, much above (2* the target above),
+         * we now expect time_last to match the time_now to resync back
+         */
+        time_now = 1100;
+        time_last = 0;
+        val = lwutil_tutil_has_elapsed(time_now, &time_last, 500);
+        TEST_IF_TRUE(val == 1);
+        TEST_IF_TRUE(time_last == 1100);
+
+        /*
+         * Test data assumes step is 500ms
+         */
+        const test_time_tutil_data_t data_entries[] = {
+            //{.time_now = 0, .time_expected = 0, .val_expected = 0},
+            {0U, 0U, 0U},       // Starting point
+            {200, 0U, 0U},      // First 200ms
+            {400, 0U, 0U},      // Another 400ms
+            {600U, 500U, 1U},   // First elapse happens here
+            {800U, 500U, 0U},   // No new elapse
+            {1000U, 1000U, 1U}, // 1000 reached, elapse triggered
+            {1750U, 1500U, 1U}, // Another elapsed reached
+            {2750U, 2750U, 1U}, // Elapsed reached, but this time it is at least 2x the delta, so make it equal
+            {3000U, 2750U, 0U}, // No elapse since last check
+            {3250U, 3250U, 1U}, // Elapse happened
+
+            /* Add here the cases for overflow situation */
+            {0xFFFFFFF0U, 0xFFFFFFF0U, 1U}, //Elapse happened from the previous run, large gap, make it equal
+            {0U, 0xFFFFFFF0U, 0U},          //Overflow happens here
+            {500U, 484U, 1U},               // Elapse after 500
+            {500U, 484U, 0U},               // No new elapse
+        };
+
+        /* Starting point goes here */
+        time_now = 0UL;
+        time_last = 0UL;
+        val = 0U;
+        for (size_t idx = 0; idx < (sizeof(data_entries) / sizeof(data_entries[0])); ++idx) {
+            const test_time_tutil_data_t* entry = &data_entries[idx];
+
+            /* Set the time, call the elapsed, check the outcome */
+            time_now = entry->time_now;
+            val = lwutil_tutil_has_elapsed(time_now, &time_last, 500U);
+            if (val != entry->val_expected) {
+                printf("Test failed: Line: %u, val: %u (expected: %u), time_now: %u, time_last: %u (expected: %u), "
+                       "data array index: %u",
+                       (int)__LINE__, (unsigned)val, (unsigned)entry->val_expected, (unsigned)time_now,
+                       (unsigned)time_last, (unsigned)entry->time_expected, (unsigned)idx);
+            }
+            TEST_IF_TRUE(val == entry->val_expected);
+            TEST_IF_TRUE(time_last == entry->time_expected);
+        }
     }
     return retval;
 }

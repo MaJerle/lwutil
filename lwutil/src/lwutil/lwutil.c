@@ -29,7 +29,7 @@
  * This file is part of LwUTIL - Lightweight utility library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.4.0
+ * Version:         v1.5.0
  */
 #include <stddef.h>
 #include <stdint.h>
@@ -96,10 +96,11 @@ lwutil_u32_to_8asciis(uint32_t hex, char* ascii) {
  * \param           ptr: Array pointer to load data from
  * \param           ptr_len: Input array length
  * \param           val_out: Pointer to variable to write result value
- * \return          Number of bytes written (stored). `0` in case of an error.
+ * \return          Number of bytes used to load the full number. Set to `0` in case of an error.
  */
 uint8_t
 lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out) {
+    const size_t max_bytes = 5;
     size_t cnt = 0;
     uint32_t val = 0;
     const uint8_t* p_data = ptr;
@@ -112,7 +113,7 @@ lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out) {
         byt = *p_data++;
         val |= ((uint32_t)(byt & 0x7FU)) << (cnt * 7U);
         ++cnt;
-    } while (--ptr_len > 0 && (byt & 0x80U) > 0);
+    } while (--ptr_len > 0 && cnt < max_bytes && (byt & 0x80U) > 0);
 
     /* Check memory length */
     if ((byt & 0x80U) > 0) {
@@ -134,7 +135,7 @@ lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out) {
  * \param           val: Value to encode into byte sequence
  * \param           ptr: Array to write output result
  * \param           ptr_len: Length of an input array
- * \return          Number of bytes written (stored). `0` in case of an error.
+ * \return          Number of bytes written (stored) in the memory. Set to `0` in case of an error.
  */
 uint8_t
 lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len) {
@@ -155,4 +156,61 @@ lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len) {
         cnt = 0;
     }
     return cnt;
+}
+
+/**
+ * \brief           Check the the time between time now and time variable
+ *                  is greater than the defined time_period.
+ * 
+ * When it is, the time_variable is updated accordingly, following the `2` possible scenarios:
+ *  - Delta time is less than 2x period, the time variable is increased by period, to keep the drift-free updates
+ *  - Delta time is more than 2x period, the time variable is set to current time, to resync the drift
+ * 
+ * The check if: `(time_now - *time_variable) >= time_period`
+ * 
+ * The function can be used as follows:
+ * 
+ * ```c
+ * //At the top somewhere
+ * static uint32_t time_last;
+ * 
+ * //Later periodically in the function calls
+ * if (lwutil_tutil_has_elapsed(time_now, &time_last, 500)) {
+ *  // Do something if time_now - time_last is at least 500 units apart
+ *  // will also update the time_last to either +500, or to the time_now, depending on the delta
+ * }
+ * ```
+ * 
+ * \note            This is the 32-bit time variant
+ * 
+ * \param           time_now: Current time. It can be in ms or any other unit, as long as all variables hold same unit
+ * \param           time_variable: Time variable to check against. It is a pointer to the variable
+ * \param           time_period: Time period to check against
+ * \return          `1` is time elapsed, `0` otherwise  
+ */
+uint8_t
+lwutil_tutil_has_elapsed(const uint32_t time_now, uint32_t* const time_variable, const uint32_t time_period) {
+    uint8_t retval = 0;
+
+    if (time_variable != NULL) {
+        const uint32_t delta = time_now - *time_variable;
+        if (delta >= time_period) {
+            retval = 1;
+
+            /*
+             * When the delta is much larger than the period,
+             * we set the time to the new time, and not to the time_period aligned time_variable
+             * 
+             * This is to simplify the process or else we would enter into the
+             * remainder arithmetic which might be slow for small CPUs
+             */
+            if (delta >= (2 * time_period)) {
+                *time_variable = time_now;
+            } else {
+                *time_variable += time_period;
+            }
+        }
+    }
+
+    return retval;
 }
