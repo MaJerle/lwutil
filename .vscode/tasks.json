@@ -43,6 +43,19 @@
             "problemMatcher": [],
         },
         {
+            "type": "shell",
+            "label": "Run all tests (python)",
+            "command": "python3 test.py",
+            "options": {
+                "cwd": "${workspaceFolder}/tests"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
             "label": "Docs: Install python plugins from requirements.txt file",
             "type": "shell",
             "command": "python -m pip install -r requirements.txt",

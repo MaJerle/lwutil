@@ -2,5 +2,5 @@
 
 # Add more sources
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/test_full.c
+    ${CMAKE_CURRENT_LIST_DIR}/test_macros.c
 )

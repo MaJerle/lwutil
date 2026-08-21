@@ -13,14 +13,13 @@ def main(args):
 
         # Reset directory, delete previous runs
         os.chdir(basep)
-        try: shutil.rmtree('__build__/', ignore_errors=True)
-        except: pass
+        shutil.rmtree('__build__', ignore_errors=True)
+        os.makedirs('__build__', exist_ok=True)
 
         # Run and test
-        os.mkdir('__build__')
         os.chdir('__build__')
         print('Configure the CMake', flush=True)
-        retval |= os.system('cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -S../.. -G Ninja -DTEST_CMAKE_FILE_NAME={}'.format(file))
+        retval |= os.system('cmake --fresh -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -S../.. -G Ninja -DTEST_CMAKE_FILE_NAME={}'.format(file))
         
         print('Compile', flush=True)
         retval |= os.system('cmake --build .')
