@@ -2,6 +2,8 @@
 
 ## Develop
 
+- Add simple rolling regression slope utility for fixed step horizontal set of data
+ 
 ## v1.5.0
 
 - Fix the platformio library package description

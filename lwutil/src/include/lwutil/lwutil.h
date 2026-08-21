@@ -482,6 +482,29 @@ uint8_t lwutil_st_u32_varint(uint32_t val, void* ptr, size_t ptr_len);
 uint8_t lwutil_tutil_has_elapsed(uint32_t time_now, uint32_t* time_variable, uint32_t time_period);
 
 /**
+ * \brief           Rolling regression slope instance
+ *
+ */
+typedef struct {
+    size_t index; /*!< Next write index */
+    size_t count; /*!< Number of entries in the buffer */
+
+    size_t capacity; /*!< Capacity in the buffer when it is full */
+    int32_t* buffer; /*!< Pointer to the array of values */
+
+    int32_t sum_Y;  /*!< Sum of all values currently in the buffer */
+    int64_t sum_xY; /*!< Sum of all the multiplies of the counter and Y values */
+
+    int64_t sum_x; /*!< Sum of `x` sample positions for a full window, precomputed by \ref lwutil_rregslope_init */
+    int64_t denom; /*!< Denominator of the least-squares slope formula for a full window,
+                        precomputed by \ref lwutil_rregslope_init */
+} lwutil_rregslope_t;
+
+uint8_t lwutil_rregslope_init(lwutil_rregslope_t* rrs, int32_t* buffer, size_t buffer_len);
+uint8_t lwutil_rregslope_add_value(lwutil_rregslope_t* rrs, int32_t value);
+uint8_t lwutil_rregslope_compute_slope(const lwutil_rregslope_t* rrs, int32_t* slope);
+
+/**
  * \}
  */
 
