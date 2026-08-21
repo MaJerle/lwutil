@@ -1,4 +1,4 @@
-import glob, os, shutil, sys, argparse
+import glob, os, shutil, subprocess, sys, argparse
 
 def main(args):
     retval:int = 0
@@ -13,19 +13,18 @@ def main(args):
 
         # Reset directory, delete previous runs
         os.chdir(basep)
-        try: shutil.rmtree('__build__/', ignore_errors=True)
-        except: pass
+        shutil.rmtree('__build__', ignore_errors=True)
+        os.makedirs('__build__', exist_ok=True)
 
         # Run and test
-        os.mkdir('__build__')
         os.chdir('__build__')
         print('Configure the CMake', flush=True)
-        retval |= os.system('cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -S../.. -G Ninja -DTEST_CMAKE_FILE_NAME={}'.format(file))
+        retval |= subprocess.run(['cmake', '--fresh', '-DCMAKE_C_COMPILER=gcc', '-DCMAKE_CXX_COMPILER=g++', '-S../..', '-G', 'Ninja', '-DTEST_CMAKE_FILE_NAME={}'.format(file)]).returncode
         
         print('Compile', flush=True)
-        retval |= os.system('cmake --build .')
+        retval |= subprocess.run(['cmake', '--build', '.']).returncode
         print('Run test', flush=True)
-        retval |= os.system('ctest . --output-on-failure -C Debug')
+        retval |= subprocess.run(['ctest', '.', '--output-on-failure', '-C', 'Debug']).returncode
 
     return retval
 
