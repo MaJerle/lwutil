@@ -2,6 +2,8 @@
 
 ## Develop
 
+- Add `lwutil_rregslope_reset`, `lwutil_rregslope_get_capacity` and `lwutil_rregslope_get_count` to the rolling regression slope utility
+
 ## v1.6.0
 
 - Add simple rolling regression slope utility for fixed step horizontal set of data

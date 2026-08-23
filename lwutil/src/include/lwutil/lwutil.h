@@ -503,6 +503,33 @@ typedef struct {
 uint8_t lwutil_rregslope_init(lwutil_rregslope_t* rrs, int32_t* buffer, size_t buffer_len);
 uint8_t lwutil_rregslope_add_value(lwutil_rregslope_t* rrs, int32_t value);
 uint8_t lwutil_rregslope_compute_slope(const lwutil_rregslope_t* rrs, int32_t* slope);
+uint8_t lwutil_rregslope_reset(lwutil_rregslope_t* rrs);
+
+/**
+ * \brief           Get the capacity for number of samples the buffer can hold
+ *
+ * \note            Buffer is full when count is equal to capacity
+ *
+ * \param           rrs: Regression slope instance
+ * \return          Number of samples the buffer can hold
+ */
+static inline size_t
+lwutil_rregslope_get_capacity(const lwutil_rregslope_t* rrs) {
+    return rrs != NULL ? rrs->capacity : 0;
+}
+
+/**
+ * \brief           Get the current samples counter in the buffer
+ *
+ * \note            Buffer is full when count is equal to capacity
+ *
+ * \param           rrs: Regression slope instance
+ * \return          Number of samples in the buffer currently
+ */
+static inline size_t
+lwutil_rregslope_get_count(const lwutil_rregslope_t* rrs) {
+    return rrs != NULL ? rrs->count : 0;
+}
 
 /**
  * \}

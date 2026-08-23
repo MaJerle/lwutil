@@ -179,13 +179,10 @@ lwutil_rregslope_init(lwutil_rregslope_t* rrs, int32_t* buffer, size_t buffer_le
         const int64_t sum_x = (n * (n - 1)) / 2;
         const int64_t sum_x2 = ((n - 1) * n * (2 * n - 1)) / 6;
 
-        rrs->index = 0;
-        rrs->count = 0;
+        lwutil_rregslope_reset(rrs);
+
         rrs->capacity = buffer_len;
         rrs->buffer = buffer;
-
-        rrs->sum_Y = 0;
-        rrs->sum_xY = 0;
 
         /* Constants of the least-squares formula for a full window, 
             only depend on the window size */
@@ -255,6 +252,28 @@ lwutil_rregslope_compute_slope(const lwutil_rregslope_t* rrs, int32_t* slope) {
         if (slope != NULL) {
             *slope = (int32_t)(numerator / rrs->denom);
         }
+        ret = 1;
+    }
+    return ret;
+}
+
+/**
+ * \brief           Reset the rolling regression window,
+ *                  clear the history and all rolling sums to zero
+ * 
+ * \param           rrs: Rolling regression instance to work with
+ * \return          `1` on success, `0` otherwise
+ */
+uint8_t
+lwutil_rregslope_reset(lwutil_rregslope_t* rrs) {
+    uint8_t ret = 0;
+
+    if (rrs != NULL) {
+        rrs->index = 0;
+        rrs->count = 0;
+        rrs->sum_Y = 0;
+        rrs->sum_xY = 0;
+
         ret = 1;
     }
     return ret;
