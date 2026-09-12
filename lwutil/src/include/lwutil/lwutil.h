@@ -4,7 +4,7 @@
  */
 
 /*
- * Copyright (c) 2024 Tilen MAJERLE
+ * Copyright (c) 2026 Tilen MAJERLE
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -59,7 +59,7 @@ extern "C" {
 /**
  * \brief           Get size of statically allocated array
  * Array must be declared in a form of `type var_name[element_count]`
- * 
+ *
  * \note            This is an alias of \ref LWUTIL_ARRAYSIZE
  *
  * \param[in]       x: Object to get array size of
@@ -109,21 +109,21 @@ extern "C" {
 
 /**
  * \brief           Maps the input number with the min and max range to the map of the output min and max range
- * 
+ *
  *                  Mathematical calculation is:
- * 
+ *
  *                       (x - in_min) * (out_max - out_min)
  *                  y = ------------------------------------ + out_min
- *                                (in_max - in_min)  
+ *                                (in_max - in_min)
  *
  * \note            Data types depend on the user inputs. If high precision is required,
  *                  user can cast the input variables to appropriate type (double or float),
  *                  or use integer types if decimal precision is not required.
- * 
+ *
  * \note            Input data is not constrained between out min and out max values.
- *                  This may sometimes be useful for the application. 
+ *                  This may sometimes be useful for the application.
  *                  Use \ref LWUTIL_CONSTRAIN macro to constrain the value
- * 
+ *
  * \param[in]       x: Input value to map
  * \param[in]       in_min: Minimum value to map from (input boundary)
  * \param[in]       in_max: Maximum value to map from (input boundary)
@@ -139,16 +139,16 @@ extern "C" {
 /**
  * \brief           Get absolute value of the input
  *                  Returns always-positive value of the input.
- * 
+ *
  * \note            Special care must be taken when input variable holds
  *                  minimum value available for given signed integer type (char, int, long, ...).
- * 
+ *
  *                  Making absolute value of such input means longer output data type requirement.
- * 
+ *
  *                  Consider writing result of this function to unsigned type of same integer width.
  *                  For example, minimum `signed char` value is `-128` while its absolute value (`128`)
  *                  requires variable type of either `unsigned char` or minimum signed 16-bit (or more).
- * 
+ *
  * \param[in]       x: Input value
  * \return          Absolute value of the input value
  *
@@ -165,9 +165,9 @@ extern "C" {
 /**
  * \brief           Dereference the pointer and assign the value to it,
  *                  but only if ptr is not NULL.
- * 
+ *
  * \note            It is fully up to user to handle to correct variable and data types
- * 
+ *
  * \param[in]       ptr: Pointer to check and assign to
  * \param[in]       value: Value to assign
  */
@@ -185,7 +185,7 @@ extern "C" {
  * \brief           Compile time assert to validate specific expression.
  *                  Compilation will fail if expression evaluated to zero
  * \note            Can only be used with the integer types
- * 
+ *
  * \param[in]       exp: Expression to test. It must be compile-time evaluation
  * \param[in]       random_variable_name: Meaningful variable name to be used.
  *                      Can be whatever until it is valid variable name
@@ -196,7 +196,7 @@ extern "C" {
 /**
  * \brief           Check if all bits in the `bit_mask` are set in the input value
  * \note            Can only be used with the integer types
- * 
+ *
  * \param[in]       val: Value to check for bits in
  * \param[in]       bit_mask: Bit mask to check in value
  * \return          `1` if all bits are set, `0` otherwise
@@ -206,7 +206,7 @@ extern "C" {
 /**
  * \brief           Check if any of the `bit_mask` bits is set in the input value
  * \note            Can only be used with the integer types
- * 
+ *
  * \param[in]       val: Value to check for bits in
  * \param[in]       bit_mask: Bit mask to check in value
  * \return          `1` if any bit is set, `0` otherwise
@@ -216,7 +216,7 @@ extern "C" {
 /**
  * \brief           Set bit mask in the input value
  * \note            Can only be used with the integer types
- * 
+ *
  * \param[in]       val: Value to set bits in.
  *                      Original input is not modified. It is pass-by-value.
  * \param[in]       bit_mask: Bit mask indicating which bits to set
@@ -227,7 +227,7 @@ extern "C" {
 /**
  * \brief           Clear bit mask in the input value
  * \note            Can only be used with the integer types
- * 
+ *
  * \param[in]       val: Value to clear bits in.
  *                      Original input is not modified. It is pass-by-value.
  * \param[in]       bit_mask: Bit mask indicating which bits to clear
@@ -239,7 +239,7 @@ extern "C" {
 /**
  * \brief           Toggle bit mask in the input value
  * \note            Can only be used with the integer types
- * 
+ *
  * \param[in]       val: Value to toggle bits in.
  *                      Original input is not modified. It is pass-by-value.
  * \param[in]       bit_mask: Bit mask indicating which bits to toggle

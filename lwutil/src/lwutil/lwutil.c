@@ -4,7 +4,7 @@
  */
 
 /*
- * Copyright (c) 2024 Tilen MAJERLE
+ * Copyright (c) 2026 Tilen MAJERLE
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -87,12 +87,12 @@ lwutil_u32_to_8asciis(uint32_t hex, char* ascii) {
 
 /**
  * \brief           Load variable length integer from the byte stream to the variable.
- * 
+ *
  * Variable length integers (short varints) are stored with continuation bit (bit 7, 0x80),
  * which tells us if there is a next byte to be used as part of the number sequence.
- * 
+ *
  * 32-bit integer can be stored with anything between `1` and `5` bytes.
- * 
+ *
  * \param           ptr: Array pointer to load data from
  * \param           ptr_len: Input array length
  * \param           val_out: Pointer to variable to write result value
@@ -126,12 +126,12 @@ lwutil_ld_u32_varint(const void* ptr, size_t ptr_len, uint32_t* val_out) {
 
 /**
  * \brief           Store an integer into variable length byte sequence array.
- * 
+ *
  * Variable length integers (short varints) are stored with continuation bit (bit 7, 0x80),
  * which tells us if there is a next byte to be used as part of the number sequence.
- * 
+ *
  * 32-bit integer can be stored with anything between `1` and `5` bytes.
- * 
+ *
  * \param           val: Value to encode into byte sequence
  * \param           ptr: Array to write output result
  * \param           ptr_len: Length of an input array
@@ -184,7 +184,7 @@ lwutil_rregslope_init(lwutil_rregslope_t* rrs, int32_t* buffer, size_t buffer_le
         rrs->capacity = buffer_len;
         rrs->buffer = buffer;
 
-        /* Constants of the least-squares formula for a full window, 
+        /* Constants of the least-squares formula for a full window,
             only depend on the window size */
         rrs->sum_x = sum_x;
         rrs->denom = (n * sum_x2) - (sum_x * sum_x);
@@ -260,7 +260,7 @@ lwutil_rregslope_compute_slope(const lwutil_rregslope_t* rrs, int32_t* slope) {
 /**
  * \brief           Reset the rolling regression window,
  *                  clear the history and all rolling sums to zero
- * 
+ *
  * \param           rrs: Rolling regression instance to work with
  * \return          `1` on success, `0` otherwise
  */
@@ -282,32 +282,32 @@ lwutil_rregslope_reset(lwutil_rregslope_t* rrs) {
 /**
  * \brief           Check the the time between time now and time variable
  *                  is greater than the defined time_period.
- * 
+ *
  * When it is, the time_variable is updated accordingly, following the `2` possible scenarios:
  *  - Delta time is less than 2x period, the time variable is increased by period, to keep the drift-free updates
  *  - Delta time is more than 2x period, the time variable is set to current time, to resync the drift
- * 
+ *
  * The check if: `(time_now - *time_variable) >= time_period`
- * 
+ *
  * The function can be used as follows:
- * 
+ *
  * ```c
  * //At the top somewhere
  * static uint32_t time_last;
- * 
+ *
  * //Later periodically in the function calls
  * if (lwutil_tutil_has_elapsed(time_now, &time_last, 500)) {
  *  // Do something if time_now - time_last is at least 500 units apart
  *  // will also update the time_last to either +500, or to the time_now, depending on the delta
  * }
  * ```
- * 
+ *
  * \note            This is the 32-bit time variant
- * 
+ *
  * \param           time_now: Current time. It can be in ms or any other unit, as long as all variables hold same unit
  * \param           time_variable: Time variable to check against. It is a pointer to the variable
  * \param           time_period: Time period to check against
- * \return          `1` is time elapsed, `0` otherwise  
+ * \return          `1` is time elapsed, `0` otherwise
  */
 uint8_t
 lwutil_tutil_has_elapsed(const uint32_t time_now, uint32_t* const time_variable, const uint32_t time_period) {
@@ -321,7 +321,7 @@ lwutil_tutil_has_elapsed(const uint32_t time_now, uint32_t* const time_variable,
             /*
              * When the delta is much larger than the period,
              * we set the time to the new time, and not to the time_period aligned time_variable
-             * 
+             *
              * This is to simplify the process or else we would enter into the
              * remainder arithmetic which might be slow for small CPUs
              */
