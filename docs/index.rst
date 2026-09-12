@@ -17,7 +17,7 @@ to watch multiple threads and reset system if one of them fails.
 Features
 ^^^^^^^^
 
-* Written in C (C11), compatible with `stdint.h` for size data types
+* Written in C (C11), compatible with ``stdint.h`` data types
 * Easy to use - very little platform dependency
 * Written for operating systems in mind
 

@@ -25,7 +25,13 @@ Usage is very simply. Add `lwutil.c` file to compilation flag and make sure comp
 
 ## Contribute
 
-This is a generic library and welcomes different contributions.
-We accept issue reports or, even better, pull-requests with bugs or new features.
+Fresh contributions are always welcome. Simple instructions to proceed:
 
-Use [c-code-style](https://github.com/MaJerle/c-code-style) rules for coding and keep the same coding consistency.
+1. Fork Github repository
+2. Follow [C style & coding rules](https://github.com/MaJerle/c-code-style) and use `clang-format` to format the code
+3. Create a pull request to `develop` branch with new features or bug fixes
+
+Alternatively you may:
+
+1. Report a bug
+2. Ask for a feature request
