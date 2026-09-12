@@ -2,6 +2,8 @@
 
 Set of different utility functions and macros usually used in the various applications.
 
+[Open documentation](https://docs.majerle.eu/projects/lwutil/)
+
 ## Features
 
 - Written in C (C11), compatible with `stdint.h` data types
@@ -22,7 +24,7 @@ Set of different utility functions and macros usually used in the various applic
 
 ## How to use
 
-Usage is very simply. Add `lwutil.c` file to compilation flag and make sure compiler has access to `lwutil.h` for include paths.
+Usage is very simply. Add `lwutil.c` file to compilation flag and make sure compiler has access to `lwutil.h` for include paths or use it as a *CMake library*
 
 ## Contribute
 
