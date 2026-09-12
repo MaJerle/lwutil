@@ -4,7 +4,7 @@ Set of different functions and macros usually used in the various applications.
 
 ## Features
 
-- Support for C99 or later
+- Written in C (C11), compatible with `stdint.h` data types
 - Support for minimal and maximal values, value constrain and range mapping
 - Support for absolute values
 - Support for unused macros
