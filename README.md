@@ -1,22 +1,23 @@
 # C language utility library
 
-Set of different functions and macros usually used in the various applications.
+Set of different utility functions and macros usually used in the various applications.
 
 ## Features
 
 - Written in C (C11), compatible with `stdint.h` data types
-- Support for minimal and maximal values, value constrain and range mapping
-- Support for absolute values
-- Support for unused macros
-- Support for conditional pointer dereference and value assignment
-- Support for storing and loading data from array in little- or big- endian formats, including pointer-advancing extended variants
-- Support for retrieving number of elements for statically allocated array
-- Support for bitwise operations to set, clear, check or toggle bits
-- Support for converting `8/16/32-bit` values to their hexadecimal ASCII representation
-- Support for encoding and decoding `32-bit` values in variable-length integer (varint) format
-- Support for time-elapsed checks against a rolling time reference, useful for periodic tasks
-- Support for rolling (sliding-window) linear regression slope calculation over fixed-step data
-- Compilation-time assert feature
+- Get the minimum or maximum of two values, constrain a value to a range, or map it between two ranges
+- Get the absolute value of a signed input
+- Silence "unused variable" compiler warnings
+- Dereference and assign through a pointer, but only when it is not `NULL`
+- Compute the number of elements in a statically allocated array
+- Store and load `16-bit` and `32-bit` values to and from a byte buffer, in little- or big-endian format
+  - Pointer-advancing extended variants are available for sequential (de)serialization
+- Set, clear, toggle or check bits against a bit mask
+- Convert `8/16/32-bit` values to their hexadecimal ASCII representation
+- Encode and decode `32-bit` values in variable-length integer (`varint`) format
+- Check whether a time period has elapsed against a rolling time reference, useful for non-blocking periodic tasks
+- Calculate a rolling (sliding-window) linear regression slope over fixed-step sample data
+- Assert an expression at compile time
 - User friendly MIT license
 
 ## How to use

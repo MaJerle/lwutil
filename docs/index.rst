@@ -3,8 +3,9 @@ LwUTIL |version| documentation
 
 Welcome to the documentation for version |version|.
 
-LwUTIL is lightweight watchdog library, primarily targeting operating systems,
-to watch multiple threads and reset system if one of them fails.
+LwUTIL is a lightweight utility library that collects small helper macros and functions
+for value comparisons, bit manipulation, endian-aware serialization and a few common
+algorithms, commonly hand-written again and again in day-to-day C/C++ development.
 
 .. image:: static/images/logo.svg
     :align: center
@@ -19,13 +20,13 @@ Features
 
 * Written in C (C11), compatible with ``stdint.h`` data types
 * Easy to use - very little platform dependency
-* Written for operating systems in mind
+* No dynamic memory allocation
 
 Requirements
 ^^^^^^^^^^^^
 
 * C compiler
-* Few *kB* of non-volatile memory
+* Negligible flash and RAM footprint - only the functions you actually call get linked
 
 Contribute
 ^^^^^^^^^^
