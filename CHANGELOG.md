@@ -2,6 +2,8 @@
 
 ## Develop
 
+- Fix wrong rolling regression slope when the sum of the window values does not fit in `int32_t`
+
 ## v1.6.1
 
 - Add `lwutil_rregslope_reset`, `lwutil_rregslope_get_capacity` and  `lwutil_rregslope_get_count` to the rolling regression slope utility

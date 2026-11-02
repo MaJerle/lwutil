@@ -492,7 +492,7 @@ typedef struct {
     size_t capacity; /*!< Capacity in the buffer when it is full */
     int32_t* buffer; /*!< Pointer to the array of values */
 
-    int32_t sum_Y;  /*!< Sum of all values currently in the buffer */
+    int64_t sum_Y;  /*!< Sum of all values currently in the buffer */
     int64_t sum_xY; /*!< Sum of all the multiplies of the counter and Y values */
 
     int64_t sum_x; /*!< Sum of `x` sample positions for a full window, precomputed by \ref lwutil_rregslope_init */

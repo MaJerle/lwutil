@@ -216,7 +216,7 @@ lwutil_rregslope_add_value(lwutil_rregslope_t* rrs, int32_t value) {
     } else {
         /* Window full: drop the oldest sample and slide the window by one, see comment above for the derivation */
         const int32_t oldest_value = rrs->buffer[rrs->index];
-        const int32_t old_sum_Y = rrs->sum_Y;
+        const int64_t old_sum_Y = rrs->sum_Y;
         const int64_t old_sum_xY = rrs->sum_xY;
 
         /* Every remaining sample's weight (x) drops by 1; the new sample becomes the newest, at x = capacity - 1 */

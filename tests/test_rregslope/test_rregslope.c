@@ -213,5 +213,16 @@ test_run(void) {
         TEST_IF_TRUE(lwutil_rregslope_get_capacity(&rrs) == capacity_before2);
         TEST_IF_TRUE(lwutil_rregslope_get_count(&rrs) == 0);
     }
+    {
+        /* Values near the int32_t limits: their sum does not fit in int32_t */
+        int32_t buffer[4];
+
+        TEST_IF_TRUE(lwutil_rregslope_init(&rrs, buffer, LWUTIL_ASZ(buffer)) == 1);
+        for (size_t i = 0; i < 6; ++i) {
+            TEST_IF_TRUE(lwutil_rregslope_add_value(&rrs, (int32_t)(2000000000 - 10 * (int32_t)i)) == 1);
+        }
+        TEST_IF_TRUE(lwutil_rregslope_compute_slope(&rrs, &slope) == 1);
+        TEST_IF_TRUE(slope == -10);
+    }
     return retval;
 }
