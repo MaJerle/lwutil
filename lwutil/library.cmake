@@ -16,6 +16,9 @@ set(LWUTIL_CUSTOM_INC_DIR ${CMAKE_CURRENT_BINARY_DIR}/lib_inc)
 # Library core sources
 set(lwutil_core_SRCS 
     ${CMAKE_CURRENT_LIST_DIR}/src/lwutil/lwutil.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/lwutil/lwutil_rregslope.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/lwutil/lwutil_tutil.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/lwutil/lwutil_varint.c
 )
 
 # Setup include directories

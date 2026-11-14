@@ -2,14 +2,16 @@
 
 ## Develop
 
+- Separate modules to its own files
+
 ## v1.6.1
 
-- Add `lwutil_rregslope_reset`, `lwutil_rregslope_get_capacity` and  `lwutil_rregslope_get_count` to the rolling regression slope utility
+- Add `lwutil_rregslope_reset`, `lwutil_rregslope_get_capacity` and `lwutil_rregslope_get_count` to the rolling regression slope utility
 
 ## v1.6.0
 
 - Add simple rolling regression slope utility for fixed step horizontal set of data
- 
+
 ## v1.5.0
 
 - Fix the platformio library package description
